@@ -1,0 +1,15 @@
+#+REVEAL_ROOT: file:///home/k/src/reveal.js/
+#+OPTIONS: texht:nil ^:nil toc:nil  num:nil
+#+REVEAL_THEME: black
+#+REVEAL_TRANS: zoom
+#+ATTR_REVEAL: :frag t
+#+AUTHOR: Alex Koval for KharkivPy
+#+TITLE: Kubernetes for Python developers
+
+* Who am I
+
+avkoval (bitbucket, github)
+
+- Web (Python, Django) developer in https://ua2web.com
+- DevOps in https://cupermind.com
+- Backend Architect
