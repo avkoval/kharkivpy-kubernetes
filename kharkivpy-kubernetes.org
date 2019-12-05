@@ -1,0 +1,328 @@
+#+PROPERTY: header-args :eval never-export
+#+REVEAL_ROOT: file:///home/k/src/reveal.js/
+#+OPTIONS: texht:nil ^:nil toc:nil  num:nil
+#+REVEAL_THEME: black
+#+REVEAL_TRANS: zoom
+#+ATTR_REVEAL: :frag t
+#+AUTHOR: Alex Koval for KharkivPy
+#+TITLE: Kubernetes for Python developers
+
+* QR-code
+
+#+BEGIN_SRC sh :results output replace :exports none
+qr https://tinyurl.com/s72zqlg > images/kharkivpy.png
+#+END_SRC
+
+[[./images/kharkivpy.png]]
+
+** Who am I
+
+ avkoval (bitbucket, github)
+ +http://alex.koval.kharkov.ua+
+
+ - Web (Python, Django) developer in +https://ua2web.com+
+ - DevOps in https://cupermind.com
+ - Backend Architect
+
+* Why kubernetes
+
+- Fast scaling (container based, declarative objects configuration)
+- Fault tolerant (e.g. failures on nodes are not critical)
+- Containers are good abstractions:
+  - e.g. local [[https://docker.io][Docker]] provides similar environment
+- cluster auto scaling scaling is easy
+  - especially on well known providers like AWS, Google, Azure
+
+** Deployment strategies
+
+ - *RollingUpdate* (efs)
+ - *Recreate* (All existing Pods are killed before new ones are created when)
+   - GP2 (RWO)
+ - *Canary deployments* strategy (ingress-canary): when we deploy several versions of same app
+   1. only part of users will use new app version
+   2. others will see older
+
+** Why (when) not
+
+1. For a *small* application could be overkill as it requires a lot of /overhead/, e.g.
+   several nodes, masters, other services will eat a lot of CPU/RAM resources making this
+   unprofitable.
+
+2. *Complexity* is increased. Running your app on a VM is much simpler option. Bugs of Kubernetes,
+   the need to upgrade the cluster itself and other things make it overall more difficult
+   to handle.
+
+* Architecture
+  
+ https://platform9.com/blog/kubernetes-enterprise-chapter-2-kubernetes-architecture-concepts/
+
+[[./images/arch1.jpg]]
+
+#+REVEAL: split
+
+[[./images/ss_20191207054927_2CpZRT7feP9LJyIb1zX6.png]]
+
+[[https://aws.amazon.com/fargate/][Amazon Fargate]]
+
+** infrastructure questions not solved by kubernetes
+
+   1. required from cloud:
+      1. load balancers
+      2. persistent volumes
+
+* Working with cluster - basics
+
+Based on minikube as simplest to try.
+
+** Install [[https://github.com/kubernetes/minikube][minikube]], kubectl, helm
+
+   #+BEGIN_SRC tmux :session kharkivpy
+   sudo pacman -S minikube
+   #+END_SRC
+
+   #+BEGIN_SRC tmux :session kharkivpy
+   sudo pacman -S kubectl
+   #+END_SRC
+
+   #+BEGIN_SRC tmux :session kharkivpy
+   yay kubernetes-helm # aur/kubernetes-helm-bin
+   #+END_SRC
+   
+** Start minikube
+
+   #+BEGIN_SRC tmux :session kharkivpy
+   minikube start --vm-driver=virtualbox
+   #+END_SRC
+
+** Point to local minikube docker
+
+3. environment & helm init
+   
+   #+BEGIN_SRC tmux :session kharkivpy
+   eval $(minikube docker-env) 
+   #+END_SRC
+
+** Helm
+
+   https://helm.sh/
+
+*** Helm repo
+
+ 1. add repo
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+    helm repo add brigade https://brigadecore.github.io/charts
+    #+END_SRC
+
+ 2. search
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    helm search repo stable
+    #+END_SRC
+
+ 3. install
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    helm install mymysql stable/mysql
+    #+END_SRC
+
+*** Installing some ready packages
+
+**** search & install
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    helm search repo stable
+    helm install mymysql stable/mysql
+    #+END_SRC
+
+**** uninstall
+
+  1. List ~helm ls~
+
+     #+BEGIN_SRC tmux :session kharkivpy
+     helm ls
+     #+END_SRC
+
+  2. Uninstall
+
+     #+BEGIN_SRC tmux :session kharkivpy
+     helm uninstall mymysql
+     #+END_SRC
+ 
+** kubectl common commands
+
+*** namespaces
+
+**** kubectl get namespaces
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    kubectl get namespaces
+    #+END_SRC
+
+ Shows all namespaces. Some of them internal to kubernetes. Some of them are containers for your
+ applications.
+
+*** kubectl pods
+
+**** get pods
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    kubectl get pods
+    #+END_SRC
+
+**** delete pod
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    # kubectl delete pod 
+    #+END_SRC
+
+**** exec -it
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    # kubectl exec -it ...
+    #+END_SRC
+
+*** node
+
+**** get nodes
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    kubectl get nodes
+    kubectl describe node minikube
+    #+END_SRC
+
+* Create own app
+
+** Dockerfile
+
+[[/home/k/dev/kharkivpy-kubernetes/djangoapp/Dockerfile.prod]]
+- [[https://github.com/krallin/tini][tini]] as init
+
+#+BEGIN_EXAMPLE Dockerfile
+FROM python:3.7-stretch
+LABEL tier=prod
+
+ENV TERM xterm-256color
+ENV PYTHONUNBUFFERED 1
+
+ENV TINI_VERSION v0.18.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+
+...
+
+ENTRYPOINT ["/tini", "--"]
+#+END_EXAMPLE
+
+** Helm
+
+Helm provides a template, create it for example this way:
+
+#+BEGIN_SRC sh :dir ~/dev/kharkivpy-kubernetes/djangoapp/ :results output replace :async t
+mkdir helm2 && cd helm2
+helm create helloworld
+#+END_SRC
+
+#+RESULTS:
+: Creating helloworld
+
+Now, lets compare... 
+
+* Providers
+
+https://kubernetes.io/docs/concepts/cluster-administration/cloud-providers/
+
+** Google
+
+- Google Kubernetes Engine https://cloud.google.com/kubernetes-engine/
+
+** Azure
+
+https://docs.microsoft.com/en-us/azure/aks/
+
+** Amazon AWS
+
+*** EKS
+
+https://aws.amazon.com/eks/
+
+*** EKS/Fargate
+
+https://aws.amazon.com/fargate/
+
+** Digital Ocean
+
+[[./images/ss_20191207081932_INETqRoZVuAGmOPgwSKt.png]]
+
+- Good price (charge only per node, no charges for masters)
+- Works well (~year), cluster upgrades
+
+#+REVEAL: split
+
+[[./images/ss_20191207083406_fdh7SFrdeqAzye3umh7z.png]]
+
+* A few words about openshift
+
+  https://cloudowski.com/articles/10-differences-between-openshift-and-kubernetes/
+
+** Benefits
+
+ - Better UI
+ - Authorization / project / user management out of the box
+ - Deployments 
+
+** Start
+
+- https://www.openshift.com/deploying-to-openshift/
+- https://www.openshift.com/deploying-to-openshift/
+
+** Our experience
+
+- More complex to support from DevOps perspective, less info, most of it locked inside of paid
+  subscription for RedHat account
+
+- As it is less popular the bugs are difficult to fix. Cluster upgrades are not that easy.
+
+* Complex topics
+
+** Helm - where to store files/configuration variables/secrets?
+
+ - [X] /Helm Charts/ are better to be stored with project
+ - [ ] Where to store configuration?
+   - We are going to use harshicorp vault for this vaultproject.io
+   - [ ] AWS parameter store?
+     - get parameters for version xxx and put it back as yaml to helm and helm will apply it
+     - /TODO:/ check helm-ssm plugin
+
+* Common problems
+
+ - Your app should follow https://12factor.net/
+ - We had problems with systems like Magento:
+   - requires very fast storage for initial deployment phase
+   - requires container to be online when building 
+ - For example problems with persistent disk storage
+   - efs is expensive
+   - gp2 is cheap but it won't support /RollingUpdate/
+
+* Presentation build with
+
+- [[https://github.com/yjwen/org-reveal/][org-reveal]]
+- [[https://revealjs.com/][Reveal.js]]
+* QR-code
+
+#+BEGIN_SRC sh :results output replace :exports none
+qr https://tinyurl.com/s72zqlg > images/kharkivpy.png
+#+END_SRC
+
+[[./images/kharkivpy.png]]
+
+** Who am I
+
+ avkoval (bitbucket, github)
+ +http://alex.koval.kharkov.ua+
+
+ - Web (Python, Django) developer in +https://ua2web.com+
+ - DevOps in https://cupermind.com
+ - Backend Architect
+

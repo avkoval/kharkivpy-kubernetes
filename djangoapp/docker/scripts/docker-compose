@@ -1,0 +1,27 @@
+#!/bin/bash
+
+source .docker_env/bin/activate
+
+source_it() {
+  while read -r line; do
+    if [[ -n "$line" ]] && [[ $line != \#* ]]; then
+      export "$line"
+    fi
+  done < $1
+}
+
+source_it "./docker/settings/services.env"
+source_it "./docker/settings/django.env"
+# source_it "./.secret-vars.env"
+source_it "./.env"
+
+if [ -z "$USER_UID" ]
+then
+  export USER_UID=$(id -u)
+  export USER_GID=$(id -g)
+fi
+
+# export HG_TIP_INFO=$(hg tip  --template "{branch}_{p1rev}_{node|short}")
+export GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD | tr '/' '-')
+
+docker-compose "$@"

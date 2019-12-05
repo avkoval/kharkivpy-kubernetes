@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Kubernetes for Python developers</title>
+<meta name="author" content="Alex Koval for KharkivPy"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="file:///home/k/src/reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="file:///home/k/src/reveal.js/css/theme/black.css" id="theme"/>
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'file:///home/k/src/reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<style type="text/css">html{font-family:sans-serif;line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block}audio:not([controls]){display:none;height:0}progress{vertical-align:baseline}[hidden],template{display:none}a{background-color:transparent;-webkit-text-decoration-skip:objects}a:active,a:hover{outline-width:0}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit;font-weight:bolder}dfn{font-style:italic}h1{font-size:2em;margin:.67em 0}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}svg:not(:root){overflow:hidden}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}button,input,optgroup,select,textarea{font:inherit;margin:0}optgroup{font-weight:700}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-input-placeholder{color:inherit;opacity:.54}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}.org-bold{font-weight:700}.org-bold-italic{font-weight:700;font-style:italic}.org-buffer-menu-buffer{font-weight:700}.org-builtin{color:#483d8b}.org-button{color:#3a5fcd;text-decoration:underline}.org-calendar-month-header{color:#00f}.org-calendar-today{text-decoration:underline}.org-calendar-weekday-header{color:#008b8b}.org-calendar-weekend-header{color:#b22222}.org-comint-highlight-input{font-weight:700}.org-comint-highlight-prompt{color:#0000cd}.org-comment,.org-comment-delimiter{color:#b22222}.org-constant{color:#008b8b}.org-diary{color:red}.org-doc{color:#8b2252}.org-error{color:red;font-weight:700}.org-escape-glyph{color:brown}.org-file-name-shadow{color:#7f7f7f}.org-fringe{background-color:#f2f2f2}.org-function-name{color:#00f}.org-glyphless-char{font-size:60%}.org-header-line{color:#333;background-color:#e5e5e5}.org-help-argument-name{font-style:italic}.org-highlight{background-color:#b4eeb4}.org-holiday{background-color:pink}.org-info-header-node{color:brown;font-weight:700;font-style:italic}.org-info-header-xref{color:#3a5fcd;text-decoration:underline}.org-info-index-match{background-color:#ff0}.org-info-menu-header{font-weight:700}.org-info-menu-star{color:red}.org-info-node{color:brown;font-weight:700;font-style:italic}.org-info-title-1{font-size:172%;font-weight:700}.org-info-title-2{font-size:144%;font-weight:700}.org-info-title-3{font-size:120%;font-weight:700}.org-info-title-4{font-weight:700}.org-info-xref{color:#3a5fcd;text-decoration:underline}.org-italic{font-style:italic}.org-keyword{color:#a020f0}.org-lazy-highlight{background-color:#afeeee}.org-link{color:#3a5fcd;text-decoration:underline}.org-link-visited{color:#8b008b;text-decoration:underline}.org-makefile-makepp-perl{background-color:#bfefff}.org-makefile-space{background-color:#ff69b4}.org-makefile-targets{color:#00f}.org-match{background-color:#ff0}.org-next-error{background-color:gtk_selection_bg_color}.org-nobreak-space{color:brown;text-decoration:underline}.org-org-agenda-calendar-event,.org-org-agenda-calendar-sexp{color:#000;background-color:#fff}.org-org-agenda-clocking{background-color:#ff0}.org-org-agenda-column-dateline{background-color:#e5e5e5}.org-org-agenda-current-time{color:#b8860b}.org-org-agenda-date{color:#00f}.org-org-agenda-date-today{color:#00f;font-weight:700;font-style:italic}.org-org-agenda-date-weekend{color:#00f;font-weight:700}.org-org-agenda-diary{color:#000;background-color:#fff}.org-org-agenda-dimmed-todo{color:#7f7f7f}.org-org-agenda-done{color:#228b22}.org-org-agenda-filter-category,.org-org-agenda-filter-effort,.org-org-agenda-filter-regexp,.org-org-agenda-filter-tags{color:#000;background-color:#bfbfbf}.org-org-agenda-restriction-lock{background-color:#eee}.org-org-agenda-structure{color:#00f}.org-org-archived,.org-org-block{color:#7f7f7f}.org-org-block-begin-line,.org-org-block-end-line{color:#b22222}.org-org-checkbox{font-weight:700}.org-org-checkbox-statistics-done{color:#228b22;font-weight:700}.org-org-checkbox-statistics-todo{color:red;font-weight:700}.org-org-clock-overlay{color:#000;background-color:#d3d3d3}.org-org-code{color:#7f7f7f}.org-org-column,.org-org-column-title{background-color:#e5e5e5}.org-org-column-title{font-weight:700;text-decoration:underline}.org-org-date{color:#a020f0;text-decoration:underline}.org-org-date-selected{color:red}.org-org-default{color:#000;background-color:#fff}.org-org-document-info{color:#191970}.org-org-document-info-keyword{color:#7f7f7f}.org-org-document-title{color:#191970;font-weight:700}.org-org-done{color:#228b22;font-weight:700}.org-org-drawer{color:#00f}.org-org-ellipsis{color:#b8860b;text-decoration:underline}.org-org-footnote{color:#a020f0;text-decoration:underline}.org-org-formula{color:#b22222}.org-org-headline-done{color:#bc8f8f}.org-org-hide{color:#fff}.org-org-latex-and-related{color:#8b4513}.org-org-level-1{color:#00f}.org-org-level-2{color:sienna}.org-org-level-3{color:#a020f0}.org-org-level-4{color:#b22222}.org-org-level-5{color:#228b22}.org-org-level-6{color:#008b8b}.org-org-level-7{color:#483d8b}.org-org-level-8{color:#8b2252}.org-org-link{color:#3a5fcd;text-decoration:underline}.org-org-list-dt{font-weight:700}.org-org-macro{color:#8b4513}.org-org-meta-line{color:#b22222}.org-org-mode-line-clock{color:#000;background-color:#bfbfbf}.org-org-mode-line-clock-overrun{color:#000;background-color:red}.org-org-priority{color:#a020f0}.org-org-quote{color:#7f7f7f}.org-org-scheduled{color:#006400}.org-org-scheduled-previously{color:#b22222}.org-org-scheduled-today{color:#006400}.org-org-sexp-date,.org-org-special-keyword{color:#a020f0}.org-org-table{color:#00f}.org-org-tag,.org-org-tag-group{font-weight:700}.org-org-target{text-decoration:underline}.org-org-time-grid{color:#b8860b}.org-org-todo{color:red;font-weight:700}.org-org-upcoming-deadline{color:#b22222}.org-org-verbatim,.org-org-verse{color:#7f7f7f}.org-org-warning{color:red;font-weight:700}.org-outline-1{color:#00f}.org-outline-2{color:sienna}.org-outline-3{color:#a020f0}.org-outline-4{color:#b22222}.org-outline-5{color:#228b22}.org-outline-6{color:#008b8b}.org-outline-7{color:#483d8b}.org-outline-8{color:#8b2252}.org-preprocessor{color:#483d8b}.org-regexp-grouping-backslash,.org-regexp-grouping-construct{font-weight:700}.org-region{background-color:gtk_selection_bg_color}.org-secondary-selection{background-color:#ff0}.org-shadow{color:#7f7f7f}.org-show-paren-match{background-color:#40e0d0}.org-show-paren-mismatch{color:#fff;background-color:#a020f0}.org-string{color:#8b2252}.org-success{color:#228b22;font-weight:700}.org-table-cell{color:#e5e5e5;background-color:#00f}.org-tooltip{color:#000;background-color:#ffffe0}.org-trailing-whitespace{background-color:red}.org-type{color:#228b22}.org-underline{text-decoration:underline}.org-variable-name{color:sienna}.org-warning{color:#ff8c00;font-weight:700}.org-warning-1{color:red;font-weight:700}body{width:95%;margin:2% auto;font-size:14px;line-height:1.4em;font-family:Georgia,serif;color:#333}@media screen and (min-width:600px){body{font-size:18px}}@media screen and (min-width:910px){body{width:900px}}::-moz-selection{background:#d6edff}::selection{background:#d6edff}dl,ol,p,ul{margin:0 auto}.title{margin:.8em auto;color:#000}.subtitle,.title{text-align:center}.subtitle{font-size:1.1em;line-height:1.4;font-weight:700;margin:1em auto}.abstract{margin:auto;width:80%;font-style:italic}.abstract p:last-of-type:before{content:"    ";white-space:pre}.status{font-size:90%;margin:2em auto}[class^=section-number-]{margin-right:.5em}[id^=orgheadline]{clear:both}#footnotes{font-size:90%}.footpara{display:inline;margin:.2em auto}.footdef{margin-bottom:1em}.footdef sup{padding-right:.5em}a{color:#527d9a;text-decoration:none}a:hover{color:#035;border-bottom:1px dotted}figure{padding:0;margin:1em auto;text-align:center}img{max-width:100%;vertical-align:middle}.MathJax_Display{margin:0!important;width:90%!important}h1,h2,h3,h4,h5,h6{color:#a5573e;line-height:1em;font-family:Helvetica,sans-serif}h1,h2,h3{line-height:1.4em}h4,h5,h6{font-size:1em}@media screen and (min-width:600px){h1{font-size:2em}h2{font-size:1.5em}h3{font-size:1.3em}h1,h2,h3{line-height:1.4em}h4,h5,h6{font-size:1.1em}}dt{font-weight:700}table{margin:1em auto;border-top:2px solid;border-collapse:collapse}table,thead{border-bottom:2px solid}table td+td,table th+th{border-left:1px solid gray}table tr{border-top:1px solid #d3d3d3}td,th{padding:.3em .6em;vertical-align:middle}caption.t-above{caption-side:top}caption.t-bottom{caption-side:bottom}caption{margin-bottom:.3em}figcaption{margin-top:.3em}th.org-center,th.org-left,th.org-right{text-align:center}td.org-right{text-align:right}td.org-left{text-align:left}td.org-center{text-align:center}blockquote{margin:1em 2em;padding-left:1em;border-left:3px solid #ccc}kbd{background-color:#f7f7f7;font-size:80%;margin:0 .1em;padding:.1em .6em}.todo{background-color:red}.done,.todo{color:#fff;padding:.1em .3em;border-radius:3px;background-clip:padding-box;font-size:80%;font-family:Lucida Console,monospace;line-height:1}.done{background-color:green}.priority{color:orange;font-family:Lucida Console,monospace}#table-of-contents li{clear:both}.tag{font-family:Lucida Console,monospace;font-size:.7em;font-weight:400}.tag span{padding:.3em;float:right;margin-right:.5em;border:1px solid #bbb;border-radius:3px;background-clip:padding-box;color:#333;background-color:#eee;line-height:1}.timestamp{color:#bebebe;font-size:90%}.timestamp-kwd{color:#5f9ea0}.org-right{margin-left:auto;margin-right:0;text-align:right}.org-left{margin-left:0;margin-right:auto;text-align:left}.org-center{margin-left:auto;margin-right:auto;text-align:center}.underline{text-decoration:underline}#postamble p,#preamble p{font-size:90%;margin:.2em}p.verse{margin-left:3%}:not(pre)>code{padding:2px 5px;margin:auto 1px;border:1px solid #ddd;border-radius:3px;background-clip:padding-box;color:#333;font-size:80%}.org-src-container{border:1px solid #ccc;box-shadow:3px 3px 3px #eee;font-family:Lucida Console,monospace;font-size:80%;margin:1em auto;padding:.1em .5em;position:relative}.org-src-container>pre{overflow:auto}.org-src-container>pre:before{display:block;position:absolute;background-color:#b3b3b3;top:0;right:0;padding:0 .5em;border-bottom-left-radius:8px;border:0;color:#fff;font-size:80%}.org-src-container>pre.src-sh:before{content:"sh"}.org-src-container>pre.src-bash:before{content:"bash"}.org-src-container>pre.src-emacs-lisp:before{content:"Emacs Lisp"}.org-src-container>pre.src-R:before{content:"R"}.org-src-container>pre.src-cpp:before{content:"C++"}.org-src-container>pre.src-c:before{content:"C"}.org-src-container>pre.src-html:before{content:"HTML"}.org-src-container>pre.src-javascript:before,.org-src-container>pre.src-js:before{content:"Javascript"}// More languages 0% http://orgmode.org/worg/org-contrib/babel/languages.html .org-src-container>pre.src-abc:before{content:"ABC"}.org-src-container>pre.src-asymptote:before{content:"Asymptote"}.org-src-container>pre.src-awk:before{content:"Awk"}.org-src-container>pre.src-C:before{content:"C"}.org-src-container>pre.src-calc:before{content:"Calc"}.org-src-container>pre.src-clojure:before{content:"Clojure"}.org-src-container>pre.src-comint:before{content:"comint"}.org-src-container>pre.src-css:before{content:"CSS"}.org-src-container>pre.src-D:before{content:"D"}.org-src-container>pre.src-ditaa:before{content:"Ditaa"}.org-src-container>pre.src-dot:before{content:"Dot"}.org-src-container>pre.src-ebnf:before{content:"ebnf"}.org-src-container>pre.src-forth:before{content:"Forth"}.org-src-container>pre.src-F90:before{content:"Fortran"}.org-src-container>pre.src-gnuplot:before{content:"Gnuplot"}.org-src-container>pre.src-haskell:before{content:"Haskell"}.org-src-container>pre.src-io:before{content:"Io"}.org-src-container>pre.src-java:before{content:"Java"}.org-src-container>pre.src-latex:before{content:"LaTeX"}.org-src-container>pre.src-ledger:before{content:"Ledger"}.org-src-container>pre.src-ly:before{content:"Lilypond"}.org-src-container>pre.src-lisp:before{content:"Lisp"}.org-src-container>pre.src-makefile:before{content:"Make"}.org-src-container>pre.src-matlab:before{content:"Matlab"}.org-src-container>pre.src-max:before{content:"Maxima"}.org-src-container>pre.src-mscgen:before{content:"Mscgen"}.org-src-container>pre.src-Caml:before{content:"Objective"}.org-src-container>pre.src-octave:before{content:"Octave"}.org-src-container>pre.src-org:before{content:"Org"}.org-src-container>pre.src-perl:before{content:"Perl"}.org-src-container>pre.src-picolisp:before{content:"Picolisp"}.org-src-container>pre.src-plantuml:before{content:"PlantUML"}.org-src-container>pre.src-python:before{content:"Python"}.org-src-container>pre.src-ruby:before{content:"Ruby"}.org-src-container>pre.src-sass:before{content:"Sass"}.org-src-container>pre.src-scala:before{content:"Scala"}.org-src-container>pre.src-scheme:before{content:"Scheme"}.org-src-container>pre.src-screen:before{content:"Screen"}.org-src-container>pre.src-sed:before{content:"Sed"}.org-src-container>pre.src-shell:before{content:"shell"}.org-src-container>pre.src-shen:before{content:"Shen"}.org-src-container>pre.src-sql:before{content:"SQL"}.org-src-container>pre.src-sqlite:before{content:"SQLite"}.org-src-container>pre.src-stan:before{content:"Stan"}.org-src-container>pre.src-vala:before{content:"Vala"}.org-src-container>pre.src-axiom:before{content:"Axiom"}.org-src-container>pre.src-browser:before{content:"HTML"}.org-src-container>pre.src-cypher:before{content:"Neo4j"}.org-src-container>pre.src-elixir:before{content:"Elixir"}.org-src-container>pre.src-request:before{content:"http"}.org-src-container>pre.src-ipython:before{content:"iPython"}.org-src-container>pre.src-kotlin:before{content:"Kotlin"}.org-src-container>pre.src-Flavored Erlang lfe:before{content:"Lisp"}.org-src-container>pre.src-mongo:before{content:"MongoDB"}.org-src-container>pre.src-prolog:before{content:"Prolog"}.org-src-container>pre.src-rec:before{content:"rec"}.org-src-container>pre.src-ML sml:before{content:"Standard"}.org-src-container>pre.src-Translate translate:before{content:"Google"}.org-src-container>pre.src-typescript:before{content:"Typescript"}.org-src-container>pre.src-rust:before{content:"Rust"}.inlinetask{background:#ffc;border:2px solid gray;margin:10px;padding:10px}#org-div-home-and-up{font-size:70%;text-align:right;white-space:nowrap}.linenr{font-size:90%}.code-highlighted{background-color:#ff0}#bibliography{font-size:90%}#bibliography table{width:100%}.creator{display:block}@media screen and (min-width:600px){.creator{display:inline;float:right}}</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide">
+<h1 class="title">Kubernetes for Python developers</h1><h2 class="author">Alex Koval for KharkivPy</h2><p class="date">Created: 2019-12-07 Sat 08:49</p>
+</section>
+
+<section>
+<section id="slide-orgeecce34">
+<h2 id="orgeecce34">QR-code</h2>
+
+<div class="figure">
+<p><img src="./images/kharkivpy.png" alt="kharkivpy.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-orgcd93d8e">
+<h3 id="orgcd93d8e">Who am I</h3>
+<p>
+avkoval (bitbucket, github)
+<del><a href="http://alex.koval.kharkov.ua">http://alex.koval.kharkov.ua</a></del>
+</p>
+
+<ul>
+<li>Web (Python, Django) developer in <del><a href="https://ua2web.com">https://ua2web.com</a></del></li>
+<li>DevOps in <a href="https://cupermind.com">https://cupermind.com</a></li>
+<li>Backend Architect</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf5674a8">
+<h2 id="orgf5674a8">Why kubernetes</h2>
+<ul>
+<li>Fast scaling (container based, declarative objects configuration)</li>
+<li>Fault tolerant (e.g. failures on nodes are not critical)</li>
+<li>Containers are good abstractions:
+<ul>
+<li>e.g. local <a href="https://docker.io">Docker</a> provides similar environment</li>
+
+</ul></li>
+<li>cluster auto scaling scaling is easy
+<ul>
+<li>especially on well known providers like AWS, Google, Azure</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-org41a7b15">
+<h3 id="org41a7b15">Deployment strategies</h3>
+<ul>
+<li><b>RollingUpdate</b> (efs)</li>
+<li><b>Recreate</b> (All existing Pods are killed before new ones are created when)
+<ul>
+<li>GP2 (RWO)</li>
+
+</ul></li>
+<li><b>Canary deployments</b> strategy (ingress-canary): when we deploy several versions of same app
+<ol>
+<li>only part of users will use new app version</li>
+<li>others will see older</li>
+
+</ol></li>
+
+</ul>
+
+</section>
+<section id="slide-org89f8d10">
+<h3 id="org89f8d10">Why (when) not</h3>
+<ol>
+<li>For a <b>small</b> application could be overkill as it requires a lot of <i>overhead</i>, e.g.
+several nodes, masters, other services will eat a lot of CPU/RAM resources making this
+unprofitable.</li>
+
+<li><b>Complexity</b> is increased. Running your app on a VM is much simpler option. Bugs of Kubernetes,
+the need to upgrade the cluster itself and other things make it overall more difficult
+to handle.</li>
+
+</ol>
+
+</section>
+</section>
+<section>
+<section id="slide-org2b360f8">
+<h2 id="org2b360f8">Architecture</h2>
+<p>
+<a href="https://platform9.com/blog/kubernetes-enterprise-chapter-2-kubernetes-architecture-concepts/">https://platform9.com/blog/kubernetes-enterprise-chapter-2-kubernetes-architecture-concepts/</a>
+</p>
+
+
+<div class="figure">
+<p><img src="./images/arch1.jpg" alt="arch1.jpg" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="./images/ss_20191207054927_2CpZRT7feP9LJyIb1zX6.png" alt="ss_20191207054927_2CpZRT7feP9LJyIb1zX6.png" />
+</p>
+</div>
+
+<p>
+<a href="https://aws.amazon.com/fargate/">Amazon Fargate</a>
+</p>
+
+</section>
+<section id="slide-org12880f5">
+<h3 id="org12880f5">infrastructure questions not solved by kubernetes</h3>
+<ol>
+<li>required from cloud:
+<ol>
+<li>load balancers</li>
+<li>persistent volumes</li>
+
+</ol></li>
+
+</ol>
+
+</section>
+</section>
+<section>
+<section id="slide-org92ca119">
+<h2 id="org92ca119">Working with cluster - basics</h2>
+<p>
+Based on minikube as simplest to try.
+</p>
+
+</section>
+<section id="slide-orgb3a0814">
+<h3 id="orgb3a0814">Install <a href="https://github.com/kubernetes/minikube">minikube</a>, kubectl, helm</h3>
+<div class="org-src-container">
+
+<pre  class="src src-tmux">sudo pacman -S minikube
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-tmux">sudo pacman -S kubectl
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-tmux">yay kubernetes-helm <span style="color: #4e4e4e;"># </span><span style="color: #8a8a8a;">aur/kubernetes-helm-bin</span>
+</pre>
+</div>
+
+</section>
+<section id="slide-org9ccee7e">
+<h3 id="org9ccee7e">Start minikube</h3>
+<div class="org-src-container">
+
+<pre  class="src src-tmux">minikube start --vm-driver=virtualbox
+</pre>
+</div>
+
+</section>
+<section id="slide-org96f6f63">
+<h3 id="org96f6f63">Point to local minikube docker</h3>
+<ol>
+<li><p>
+environment &amp; helm init
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-tmux"><span style="color: #85ad85;">eval</span> $(minikube docker-env) 
+</pre>
+</div></li>
+
+</ol>
+
+</section>
+<section id="slide-orgd852e87">
+<h3 id="orgd852e87">Helm</h3>
+<p>
+<a href="https://helm.sh/">https://helm.sh/</a>
+</p>
+
+</section>
+<section id="slide-org0a25fc4">
+<h4 id="org0a25fc4">Helm repo</h4>
+<ol>
+<li><p>
+add repo
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-tmux">helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+helm repo add brigade https://brigadecore.github.io/charts
+</pre>
+</div></li>
+
+<li><p>
+search
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-tmux">helm search repo stable
+</pre>
+</div></li>
+
+<li><p>
+install
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-tmux">helm install mymysql stable/mysql
+</pre>
+</div></li>
+
+</ol>
+
+</section>
+<section id="slide-org51c8c9d">
+<h4 id="org51c8c9d">Installing some ready packages</h4>
+<div class="outline-text-4" id="text-org51c8c9d">
+</div>
+<ul class="org-ul">
+<li><a id="org044e9cc"></a>search &amp; install<br />
+<div class="org-src-container">
+
+<pre  class="src src-tmux">helm search repo stable
+helm install mymysql stable/mysql
+</pre>
+</div>
+</li>
+
+<li><a id="org363b8ff"></a>uninstall<br />
+<ol>
+<li><p>
+List <code>helm ls</code>
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-tmux">helm ls
+</pre>
+</div></li>
+
+<li><p>
+Uninstall
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-tmux">helm uninstall mymysql
+</pre>
+</div></li>
+
+</ol>
+</li>
+</ul>
+
+</section>
+<section id="slide-orgc034d55">
+<h3 id="orgc034d55">kubectl common commands</h3>
+<div class="outline-text-3" id="text-orgc034d55">
+</div>
+</section>
+<section id="slide-orgd0da7bb">
+<h4 id="orgd0da7bb">namespaces</h4>
+<div class="outline-text-4" id="text-orgd0da7bb">
+</div>
+<ul class="org-ul">
+<li><a id="org0501d5b"></a>kubectl get namespaces<br />
+<div class="org-src-container">
+
+<pre  class="src src-tmux">kubectl get namespaces
+</pre>
+</div>
+
+<p>
+Shows all namespaces. Some of them internal to kubernetes. Some of them are containers for your
+applications.
+</p>
+</li>
+</ul>
+
+</section>
+<section id="slide-org2cfef01">
+<h4 id="org2cfef01">kubectl pods</h4>
+<div class="outline-text-4" id="text-org2cfef01">
+</div>
+<ul class="org-ul">
+<li><a id="org6e2b06d"></a>get pods<br />
+<div class="org-src-container">
+
+<pre  class="src src-tmux">kubectl get pods
+</pre>
+</div>
+</li>
+
+<li><a id="orgff10e62"></a>delete pod<br />
+<div class="org-src-container">
+
+<pre  class="src src-tmux"><span style="color: #4e4e4e;"># </span><span style="color: #8a8a8a;">kubectl delete pod </span>
+</pre>
+</div>
+</li>
+
+<li><a id="org4b9d0e5"></a>exec -it<br />
+<div class="org-src-container">
+
+<pre  class="src src-tmux"><span style="color: #4e4e4e;"># </span><span style="color: #8a8a8a;">kubectl exec -it ...</span>
+</pre>
+</div>
+</li>
+</ul>
+
+</section>
+<section id="slide-org3357f6f">
+<h4 id="org3357f6f">node</h4>
+<div class="outline-text-4" id="text-org3357f6f">
+</div>
+<ul class="org-ul">
+<li><a id="orgaa579fc"></a>get nodes<br />
+<div class="org-src-container">
+
+<pre  class="src src-tmux">kubectl get nodes
+kubectl describe node minikube
+</pre>
+</div>
+</li>
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org4632ec5">
+<h2 id="org4632ec5">Create own app</h2>
+<div class="outline-text-2" id="text-org4632ec5">
+</div>
+</section>
+<section id="slide-org69f9766">
+<h3 id="org69f9766">Dockerfile</h3>
+<p>
+<a href="file:///home/k/dev/kharkivpy-kubernetes/djangoapp/Dockerfile.prod">file:///home/k/dev/kharkivpy-kubernetes/djangoapp/Dockerfile.prod</a>
+</p>
+<ul>
+<li><a href="https://github.com/krallin/tini">tini</a> as init</li>
+
+</ul>
+
+<pre class="example">
+FROM python:3.7-stretch
+LABEL tier=prod
+
+ENV TERM xterm-256color
+ENV PYTHONUNBUFFERED 1
+
+ENV TINI_VERSION v0.18.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+
+...
+
+ENTRYPOINT ["/tini", "--"]
+</pre>
+
+</section>
+<section id="slide-org27b90ff">
+<h3 id="org27b90ff">Helm</h3>
+<p>
+Helm provides a template, create it for example this way:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-sh">mkdir helm2 &amp;&amp; <span style="color: #85ad85;">cd</span> helm2
+helm create helloworld
+</pre>
+</div>
+
+<p>
+Now, lets compare&#x2026; 
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org28f31ea">
+<h2 id="org28f31ea">Providers</h2>
+<p>
+<a href="https://kubernetes.io/docs/concepts/cluster-administration/cloud-providers/">https://kubernetes.io/docs/concepts/cluster-administration/cloud-providers/</a>
+</p>
+
+</section>
+<section id="slide-org7b05a42">
+<h3 id="org7b05a42">Google</h3>
+<ul>
+<li>Google Kubernetes Engine <a href="https://cloud.google.com/kubernetes-engine/">https://cloud.google.com/kubernetes-engine/</a></li>
+
+</ul>
+
+</section>
+<section id="slide-org52f03de">
+<h3 id="org52f03de">Azure</h3>
+<p>
+<a href="https://docs.microsoft.com/en-us/azure/aks/">https://docs.microsoft.com/en-us/azure/aks/</a>
+</p>
+
+</section>
+<section id="slide-org02b54f0">
+<h3 id="org02b54f0">Amazon AWS</h3>
+<div class="outline-text-3" id="text-org02b54f0">
+</div>
+</section>
+<section id="slide-orgbc92bd6">
+<h4 id="orgbc92bd6">EKS</h4>
+<p>
+<a href="https://aws.amazon.com/eks/">https://aws.amazon.com/eks/</a>
+</p>
+
+</section>
+<section id="slide-org25306c1">
+<h4 id="org25306c1">EKS/Fargate</h4>
+<p>
+<a href="https://aws.amazon.com/fargate/">https://aws.amazon.com/fargate/</a>
+</p>
+
+</section>
+<section id="slide-orgca826b7">
+<h3 id="orgca826b7">Digital Ocean</h3>
+
+<div class="figure">
+<p><img src="./images/ss_20191207081932_INETqRoZVuAGmOPgwSKt.png" alt="ss_20191207081932_INETqRoZVuAGmOPgwSKt.png" />
+</p>
+</div>
+
+<ul>
+<li>Good price (charge only per node, no charges for masters)</li>
+<li>Works well (~year), cluster upgrades</li>
+
+</ul>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="./images/ss_20191207083406_fdh7SFrdeqAzye3umh7z.png" alt="ss_20191207083406_fdh7SFrdeqAzye3umh7z.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc6ed7aa">
+<h2 id="orgc6ed7aa">A few words about openshift</h2>
+<p>
+<a href="https://cloudowski.com/articles/10-differences-between-openshift-and-kubernetes/">https://cloudowski.com/articles/10-differences-between-openshift-and-kubernetes/</a>
+</p>
+
+</section>
+<section id="slide-orga1e8c5c">
+<h3 id="orga1e8c5c">Benefits</h3>
+<ul>
+<li>Better UI</li>
+<li>Authorization / project / user management out of the box</li>
+<li>Deployments</li>
+
+</ul>
+
+</section>
+<section id="slide-orgab6c7de">
+<h3 id="orgab6c7de">Start</h3>
+<ul>
+<li><a href="https://www.openshift.com/deploying-to-openshift/">https://www.openshift.com/deploying-to-openshift/</a></li>
+<li><a href="https://www.openshift.com/deploying-to-openshift/">https://www.openshift.com/deploying-to-openshift/</a></li>
+
+</ul>
+
+</section>
+<section id="slide-orgbeb5a21">
+<h3 id="orgbeb5a21">Our experience</h3>
+<ul>
+<li>More complex to support from DevOps perspective, less info, most of it locked inside of paid
+subscription for RedHat account</li>
+
+<li>As it is less popular the bugs are difficult to fix. Cluster upgrades are not that easy.</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org7098e24">
+<h2 id="org7098e24">Complex topics</h2>
+<div class="outline-text-2" id="text-org7098e24">
+</div>
+</section>
+<section id="slide-org4490779">
+<h3 id="org4490779">Helm - where to store files/configuration variables/secrets?</h3>
+<ul>
+<li class="on"><code>[X]</code> <i>Helm Charts</i> are better to be stored with project</li>
+<li class="off"><code>[&#xa0;]</code> Where to store configuration?
+<ul>
+<li>We are going to use harshicorp vault for this vaultproject.io</li>
+<li class="off"><code>[&#xa0;]</code> AWS parameter store?
+<ul>
+<li>get parameters for version xxx and put it back as yaml to helm and helm will apply it</li>
+<li><i>TODO:</i> check helm-ssm plugin</li>
+
+</ul></li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org3b2cb36">
+<h2 id="org3b2cb36">Common problems</h2>
+<ul>
+<li>Your app should follow <a href="https://12factor.net/">https://12factor.net/</a></li>
+<li>We had problems with systems like Magento:
+<ul>
+<li>requires very fast storage for initial deployment phase</li>
+<li>requires container to be online when building</li>
+
+</ul></li>
+<li>For example problems with persistent disk storage
+<ul>
+<li>efs is expensive</li>
+<li>gp2 is cheap but it won't support <i>RollingUpdate</i></li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org8aac187">
+<h2 id="org8aac187">Presentation build with</h2>
+<ul>
+<li><a href="https://github.com/yjwen/org-reveal/">org-reveal</a></li>
+<li><a href="https://revealjs.com/">Reveal.js</a></li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org2658711">
+<h2 id="org2658711">QR-code</h2>
+
+<div class="figure">
+<p><img src="./images/kharkivpy.png" alt="kharkivpy.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org5b52125">
+<h3 id="org5b52125">Who am I</h3>
+<p>
+avkoval (bitbucket, github)
+<del><a href="http://alex.koval.kharkov.ua">http://alex.koval.kharkov.ua</a></del>
+</p>
+
+<ul>
+<li>Web (Python, Django) developer in <del><a href="https://ua2web.com">https://ua2web.com</a></del></li>
+<li>DevOps in <a href="https://cupermind.com">https://cupermind.com</a></li>
+<li>Backend Architect</li>
+
+</ul>
+</section>
+</section>
+</div>
+</div>
+<script src="file:///home/k/src/reveal.js/lib/js/head.min.js"></script>
+<script src="file:///home/k/src/reveal.js/js/reveal.js"></script>
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+mouseWheel: false,
+fragmentInURL: false,
+hashOneBasedIndex: false,
+pdfSeparateFragments: true,
+
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'zoom', // see README of reveal.js for options
+transitionSpeed: 'default',
+
+// Optional libraries used to extend reveal.js
+dependencies: [
+ { src: 'file:///home/k/src/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'file:///home/k/src/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'file:///home/k/src/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: 'file:///home/k/src/reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: 'file:///home/k/src/reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } }]
+
+});
+</script>
+</body>
+</html>
