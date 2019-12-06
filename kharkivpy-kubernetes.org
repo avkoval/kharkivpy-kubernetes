@@ -138,7 +138,7 @@ qr https://tinyurl.com/s72zqlg > images/kharkivpy.png
 
 ** Helm
 
- https://helm.sh/
+   https://helm.sh/
 
 *** Installing some ready packages
 
@@ -162,6 +162,16 @@ qr https://tinyurl.com/s72zqlg > images/kharkivpy.png
      #+BEGIN_SRC tmux :session kharkivpy
      helm uninstall mymysql
      #+END_SRC
+
+* Openshift
+
+** Start
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    yay minishift # bin
+    minishift start --vm-driver virtualbox
+    #+END_SRC
+
 
 
 * Presentation build with
