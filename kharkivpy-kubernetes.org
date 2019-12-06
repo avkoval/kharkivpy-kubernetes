@@ -6,10 +6,46 @@
 #+AUTHOR: Alex Koval for KharkivPy
 #+TITLE: Kubernetes for Python developers
 
-* Who am I
+* QR-code
 
-avkoval (bitbucket, github)
+#+BEGIN_SRC sh :results output replace :exports none
+qr https://tinyurl.com/s72zqlg > images/kharkivpy.png
+#+END_SRC
 
-- Web (Python, Django) developer in https://ua2web.com
-- DevOps in https://cupermind.com
-- Backend Architect
+[[./images/kharkivpy.png]]
+
+** Who am I
+
+ avkoval (bitbucket, github)
+ +http://alex.koval.kharkov.ua+
+
+ - Web (Python, Django) developer in +https://ua2web.com+
+ - DevOps in https://cupermind.com
+ - Backend Architect
+
+* Why kubernetes
+
+- Fast scaling (container based, declarative objects configuration)
+- Fault tolerant (e.g. failures on nodes are not critical)
+- Containers are good abstractions:
+  - e.g. local [[https://docker.io][Docker]] provides similar environment
+
+** Why (when) not
+
+- overall more complex configuration which certainly requires an additional skills
+- for a small application could be overkill as it requires a lot of /overhead/, e.g.
+  several nodes, masters, infra, other services will eat a lot of CPU/RAM resources.
+
+* Architecture
+
+[[./images/arch1.jpg]]
+
+** infrastructure questions not solved by kubernetes
+
+   1. ingress, load balancers
+   2. infra services - CNI
+
+* Presentation build with
+
+- [[https://github.com/yjwen/org-reveal/][org-reveal]]
+- [[https://revealjs.com/][Reveal.js]]

@@ -27,20 +27,88 @@
 <div class="reveal">
 <div class="slides">
 <section id="sec-title-slide">
-<h1 class="title">Kubernetes for Python developers</h1><h2 class="author">Alex Koval for KharkivPy</h2><p class="date">Created: 2019-12-05 Thu 20:16</p>
+<h1 class="title">Kubernetes for Python developers</h1><h2 class="author">Alex Koval for KharkivPy</h2><p class="date">Created: 2019-12-05 Thu 21:25</p>
 </section>
 
 <section>
-<section id="slide-org4279fa8">
-<h2 id="org4279fa8">Who am I</h2>
+<section id="slide-org385a222">
+<h2 id="org385a222">QR-code</h2>
+
+<div class="figure">
+<p><img src="./images/kharkivpy.png" alt="kharkivpy.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org11af928">
+<h3 id="org11af928">Who am I</h3>
 <p>
 avkoval (bitbucket, github)
+<del><a href="http://alex.koval.kharkov.ua">http://alex.koval.kharkov.ua</a></del>
 </p>
 
 <ul>
-<li>Web (Python, Django) developer in <a href="https://ua2web.com">https://ua2web.com</a></li>
+<li>Web (Python, Django) developer in <del><a href="https://ua2web.com">https://ua2web.com</a></del></li>
 <li>DevOps in <a href="https://cupermind.com">https://cupermind.com</a></li>
 <li>Backend Architect</li>
+
+</ul>
+
+
+</section>
+</section>
+<section>
+<section id="slide-org46202a0">
+<h2 id="org46202a0">Why kubernetes</h2>
+<ul>
+<li>Fast scaling (container based, declarative objects configuration)</li>
+<li>Fault tolerant (e.g. failures on nodes are not critical)</li>
+<li>Containers are good abstractions:
+<ul>
+<li>e.g. local <a href="https://docker.io">Docker</a> provides similar environment</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-org4426d6d">
+<h3 id="org4426d6d">Why not</h3>
+<ul>
+<li>overall more complex configuration which certainly requires an additional skills</li>
+<li>for a small application could be overkill as it requires a lot of <i>overhead</i>, e.g.
+several nodes, masters, infra, other services will eat a lot of CPU/RAM resources.</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org2f343fb">
+<h2 id="org2f343fb">Architecture</h2>
+
+<div class="figure">
+<p><img src="./images/arch1.jpg" alt="arch1.jpg" />
+</p>
+</div>
+
+</section>
+<section id="slide-org3170450">
+<h3 id="org3170450">infrastructure questions not solved by kubernetes</h3>
+<ol>
+<li>ingress, load balancers</li>
+<li>infra services - CNI</li>
+
+</ol>
+
+</section>
+</section>
+<section>
+<section id="slide-org821c198">
+<h2 id="org821c198">Presentation build with</h2>
+<ul>
+<li><a href="https://github.com/yjwen/org-reveal/">org-reveal</a></li>
+<li><a href="https://revealjs.com/">Reveal.js</a></li>
 
 </ul>
 </section>
