@@ -45,6 +45,125 @@ qr https://tinyurl.com/s72zqlg > images/kharkivpy.png
    1. ingress, load balancers
    2. infra services - CNI
 
+* Working with cluster - basics
+
+** COMMENT install [[https://github.com/kubernetes/minikube][minikube]], kubectl, helm
+   :LOGBOOK:
+   - State "TODO"       from              [2019-12-06 Fri 09:35]
+   - State "TODO"       from              [2019-12-06 Fri 09:30]
+   :END:
+
+1. [X] Install it with your package manager:
+
+   #+BEGIN_SRC tmux :session kharkivpy
+   sudo pacman -S minikube
+   sudo pacman -S kubectl
+   yay kubernetes-helm # aur/kubernetes-helm-bin
+   #+END_SRC
+   
+2. [X] Start it:
+
+   #+BEGIN_SRC tmux :session kharkivpy
+   minikube start --vm-driver=virtualbox
+   #+END_SRC
+
+3. [X] environment & helm init
+
+   #+BEGIN_SRC tmux :session kharkivpy
+   eval $(minikube docker-env) 
+   #+END_SRC
+
+4. [X] init helm
+
+   #+BEGIN_SRC tmux :session kharkivpy
+   helm init
+   #+END_SRC
+
+5. [X] add repo
+
+   #+BEGIN_SRC tmux :session kharkivpy
+   helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+   helm repo add brigade https://brigadecore.github.io/charts
+   #+END_SRC
+
+
+2. [X] helm install mysql for example
+
+   #+BEGIN_SRC tmux :session kharkivpy
+   helm search repo stable
+   #+END_SRC
+
+** kubectl common commands
+
+*** namespaces
+
+**** kubectl get namespaces
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    kubectl get namespaces
+    #+END_SRC
+
+ Shows all namespaces. Some of them internal to kubernetes. Some of them are containers for your
+ applications.
+
+*** kubectl pods
+
+**** get pods
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    kubectl get pods
+    #+END_SRC
+
+**** delete pod
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    # kubectl delete pod 
+    #+END_SRC
+
+
+**** exec -it
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    # kubectl exec -it ...
+    #+END_SRC
+
+*** node
+
+**** get nodes
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    kubectl get nodes
+    kubectl describe node minikube
+    #+END_SRC
+
+** Helm
+
+ https://helm.sh/
+
+*** Installing some ready packages
+
+**** search & install
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    helm search repo stable
+    helm install mymysql stable/mysql
+    #+END_SRC
+
+**** uninstall
+
+  1. List ~helm ls~
+
+     #+BEGIN_SRC tmux :session kharkivpy
+     helm ls
+     #+END_SRC
+
+  2. Uninstall
+
+     #+BEGIN_SRC tmux :session kharkivpy
+     helm uninstall mymysql
+     #+END_SRC
+
+
 * Presentation build with
 
 - [[https://github.com/yjwen/org-reveal/][org-reveal]]

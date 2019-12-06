@@ -27,12 +27,12 @@
 <div class="reveal">
 <div class="slides">
 <section id="sec-title-slide">
-<h1 class="title">Kubernetes for Python developers</h1><h2 class="author">Alex Koval for KharkivPy</h2><p class="date">Created: 2019-12-05 Thu 21:25</p>
+<h1 class="title">Kubernetes for Python developers</h1><h2 class="author">Alex Koval for KharkivPy</h2><p class="date">Created: 2019-12-06 Fri 15:03</p>
 </section>
 
 <section>
-<section id="slide-org385a222">
-<h2 id="org385a222">QR-code</h2>
+<section id="slide-org63fd8cf">
+<h2 id="org63fd8cf">QR-code</h2>
 
 <div class="figure">
 <p><img src="./images/kharkivpy.png" alt="kharkivpy.png" />
@@ -40,8 +40,8 @@
 </div>
 
 </section>
-<section id="slide-org11af928">
-<h3 id="org11af928">Who am I</h3>
+<section id="slide-org18bc131">
+<h3 id="org18bc131">Who am I</h3>
 <p>
 avkoval (bitbucket, github)
 <del><a href="http://alex.koval.kharkov.ua">http://alex.koval.kharkov.ua</a></del>
@@ -54,12 +54,11 @@ avkoval (bitbucket, github)
 
 </ul>
 
-
 </section>
 </section>
 <section>
-<section id="slide-org46202a0">
-<h2 id="org46202a0">Why kubernetes</h2>
+<section id="slide-orgd2a8ecc">
+<h2 id="orgd2a8ecc">Why kubernetes</h2>
 <ul>
 <li>Fast scaling (container based, declarative objects configuration)</li>
 <li>Fault tolerant (e.g. failures on nodes are not critical)</li>
@@ -72,8 +71,8 @@ avkoval (bitbucket, github)
 </ul>
 
 </section>
-<section id="slide-org4426d6d">
-<h3 id="org4426d6d">Why not</h3>
+<section id="slide-org70b9add">
+<h3 id="org70b9add">Why (when) not</h3>
 <ul>
 <li>overall more complex configuration which certainly requires an additional skills</li>
 <li>for a small application could be overkill as it requires a lot of <i>overhead</i>, e.g.
@@ -84,8 +83,8 @@ several nodes, masters, infra, other services will eat a lot of CPU/RAM resource
 </section>
 </section>
 <section>
-<section id="slide-org2f343fb">
-<h2 id="org2f343fb">Architecture</h2>
+<section id="slide-org157b103">
+<h2 id="org157b103">Architecture</h2>
 
 <div class="figure">
 <p><img src="./images/arch1.jpg" alt="arch1.jpg" />
@@ -93,8 +92,8 @@ several nodes, masters, infra, other services will eat a lot of CPU/RAM resource
 </div>
 
 </section>
-<section id="slide-org3170450">
-<h3 id="org3170450">infrastructure questions not solved by kubernetes</h3>
+<section id="slide-org9e47028">
+<h3 id="org9e47028">infrastructure questions not solved by kubernetes</h3>
 <ol>
 <li>ingress, load balancers</li>
 <li>infra services - CNI</li>
@@ -104,8 +103,137 @@ several nodes, masters, infra, other services will eat a lot of CPU/RAM resource
 </section>
 </section>
 <section>
-<section id="slide-org821c198">
-<h2 id="org821c198">Presentation build with</h2>
+<section id="slide-org447413a">
+<h2 id="org447413a">Working with cluster - basics</h2>
+<div class="outline-text-2" id="text-org447413a">
+</div>
+</section>
+<section id="slide-org5aa60c1">
+<h3 id="org5aa60c1">kubectl common commands</h3>
+<div class="outline-text-3" id="text-org5aa60c1">
+</div>
+</section>
+<section id="slide-org2c7b8fd">
+<h4 id="org2c7b8fd">namespaces</h4>
+<div class="outline-text-4" id="text-org2c7b8fd">
+</div>
+<ul class="org-ul">
+<li><a id="orgcb78b04"></a>kubectl get namespaces<br />
+<div class="org-src-container">
+
+<pre  class="src src-tmux">kubectl get namespaces
+</pre>
+</div>
+
+<p>
+Shows all namespaces. Some of them internal to kubernetes. Some of them are containers for your
+applications.
+</p>
+</li>
+</ul>
+
+</section>
+<section id="slide-orge58d9d8">
+<h4 id="orge58d9d8">kubectl pods</h4>
+<div class="outline-text-4" id="text-orge58d9d8">
+</div>
+<ul class="org-ul">
+<li><a id="orgd7da7c1"></a>get pods<br />
+<div class="org-src-container">
+
+<pre  class="src src-tmux">kubectl get pods
+</pre>
+</div>
+</li>
+
+<li><a id="orgef118ee"></a>delete pod<br />
+<div class="org-src-container">
+
+<pre  class="src src-tmux"><span style="color: #8c8c8c;"># </span><span style="color: #8c8c8c;">kubectl delete pod </span>
+</pre>
+</div>
+</li>
+
+
+<li><a id="orgd06c362"></a>exec -it<br />
+<div class="org-src-container">
+
+<pre  class="src src-tmux"><span style="color: #8c8c8c;"># </span><span style="color: #8c8c8c;">kubectl exec -it ...</span>
+</pre>
+</div>
+</li>
+</ul>
+
+</section>
+<section id="slide-org573915e">
+<h4 id="org573915e">node</h4>
+<div class="outline-text-4" id="text-org573915e">
+</div>
+<ul class="org-ul">
+<li><a id="org7441f2d"></a>get nodes<br />
+<div class="org-src-container">
+
+<pre  class="src src-tmux">kubectl get nodes
+kubectl describe node minikube
+</pre>
+</div>
+</li>
+</ul>
+
+</section>
+<section id="slide-orgc5f97a5">
+<h3 id="orgc5f97a5">Helm</h3>
+<p>
+<a href="https://helm.sh/">https://helm.sh/</a>
+</p>
+
+</section>
+<section id="slide-org836cc9f">
+<h4 id="org836cc9f">Installing some ready packages</h4>
+<div class="outline-text-4" id="text-org836cc9f">
+</div>
+<ul class="org-ul">
+<li><a id="org428e97e"></a>search &amp; install<br />
+<div class="org-src-container">
+
+<pre  class="src src-tmux">helm search repo stable
+helm install mymysql stable/mysql
+</pre>
+</div>
+</li>
+
+<li><a id="org99263b8"></a>uninstall<br />
+<ol>
+<li><p>
+List <code>helm ls</code>
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-tmux">helm ls
+</pre>
+</div></li>
+
+<li><p>
+Uninstall
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-tmux">helm uninstall mymysql
+</pre>
+</div></li>
+
+</ol>
+</li>
+</ul>
+
+
+</section>
+</section>
+<section>
+<section id="slide-org88c1e6d">
+<h2 id="org88c1e6d">Presentation build with</h2>
 <ul>
 <li><a href="https://github.com/yjwen/org-reveal/">org-reveal</a></li>
 <li><a href="https://revealjs.com/">Reveal.js</a></li>
