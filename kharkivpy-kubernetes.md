@@ -210,11 +210,17 @@ ENTRYPOINT ["/tini", "--"]
 Helm provides a template, create it for example this way:
 
 ``` bash
-mkdir helm2 && cd helm2
+mkdir -p helm.new && cd helm.new && rm -rf helloworld
 helm create helloworld
 ```
 
 Now, lets compare…
+
+## Install this app chart
+
+``` tmux
+
+```
 
 # Providers
 
@@ -243,8 +249,8 @@ Now, lets compare…
 
 ![](./images/ss_20191207081932_INETqRoZVuAGmOPgwSKt.png)
 
-  - Good price (charge only per node, no charges for masters)
-  - Works well (\~year), cluster upgrades
+  - Good price
+  - Works well (\~year), cluster upgrades done by them
 
 ![](./images/ss_20191207083406_fdh7SFrdeqAzye3umh7z.png)
 
@@ -282,6 +288,8 @@ Now, lets compare…
           - get parameters for version xxx and put it back as yaml to
             helm and helm will apply it
           - *TODO:* check helm-ssm plugin
+      - \[ \] consul
+      - \[ \] etcd
 
 # Common problems
 

@@ -220,7 +220,7 @@ ENTRYPOINT ["/tini", "--"]
 Helm provides a template, create it for example this way:
 
 #+BEGIN_SRC sh :dir ~/dev/kharkivpy-kubernetes/djangoapp/ :results output replace :async t
-mkdir helm2 && cd helm2
+mkdir -p helm.new && cd helm.new && rm -rf helloworld
 helm create helloworld
 #+END_SRC
 
@@ -228,6 +228,12 @@ helm create helloworld
 : Creating helloworld
 
 Now, lets compare... 
+
+** Install this app chart
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    
+    #+END_SRC
 
 * Providers
 
@@ -255,8 +261,8 @@ https://aws.amazon.com/fargate/
 
 [[./images/ss_20191207081932_INETqRoZVuAGmOPgwSKt.png]]
 
-- Good price (charge only per node, no charges for masters)
-- Works well (~year), cluster upgrades
+- Good price
+- Works well (~year), cluster upgrades done by them
 
 #+REVEAL: split
 
@@ -294,6 +300,8 @@ https://aws.amazon.com/fargate/
    - [ ] AWS parameter store?
      - get parameters for version xxx and put it back as yaml to helm and helm will apply it
      - /TODO:/ check helm-ssm plugin
+   - [ ] consul
+   - [ ] etcd
 
 * Common problems
 
