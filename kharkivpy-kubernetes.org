@@ -40,10 +40,15 @@ qr https://tinyurl.com/s72zqlg > images/kharkivpy.png
 
 [[./images/arch1.jpg]]
 
+*** fargate on right
+
+*** eks, etc on left
+
 ** infrastructure questions not solved by kubernetes
 
-   1. ingress, load balancers
-   2. infra services - CNI
+   1. required from cloud:
+      1. load balancers
+      2. persistent volumes
 
 * Working with cluster - basics
 
@@ -57,7 +62,13 @@ qr https://tinyurl.com/s72zqlg > images/kharkivpy.png
 
    #+BEGIN_SRC tmux :session kharkivpy
    sudo pacman -S minikube
+   #+END_SRC
+
+   #+BEGIN_SRC tmux :session kharkivpy
    sudo pacman -S kubectl
+   #+END_SRC
+
+   #+BEGIN_SRC tmux :session kharkivpy
    yay kubernetes-helm # aur/kubernetes-helm-bin
    #+END_SRC
    
@@ -73,21 +84,14 @@ qr https://tinyurl.com/s72zqlg > images/kharkivpy.png
    eval $(minikube docker-env) 
    #+END_SRC
 
-4. [X] init helm
-
-   #+BEGIN_SRC tmux :session kharkivpy
-   helm init
-   #+END_SRC
-
-5. [X] add repo
+4. [X] add repo
 
    #+BEGIN_SRC tmux :session kharkivpy
    helm repo add stable https://kubernetes-charts.storage.googleapis.com/
    helm repo add brigade https://brigadecore.github.io/charts
    #+END_SRC
 
-
-2. [X] helm install mysql for example
+2. [X] search
 
    #+BEGIN_SRC tmux :session kharkivpy
    helm search repo stable
@@ -163,6 +167,38 @@ qr https://tinyurl.com/s72zqlg > images/kharkivpy.png
      helm uninstall mymysql
      #+END_SRC
 
+* create own app
+
+** registry
+    #+BEGIN_SRC tmux :session kharkivpy
+    kubectl create -f https://gist.githubusercontent.com/coco98/b750b3debc6d517308596c248daf3bb1/raw/6efc11eb8c2dce167ba0a5e557833cc4ff38fa7c/kube-registry.yaml
+    #+END_SRC
+
+    #+BEGIN_SRC tmux :session kharkivpy
+    kubectl port-forward --namespace kube-system $(kubectl get po -n kube-system | grep kube-registry-v0 | \awk '{print $1;}') 5000:5000
+    #+END_SRC
+    
+
+* Providers
+
+** Google
+
+- Google Kubernetes Engine https://cloud.google.com/kubernetes-engine/
+
+** Azure
+
+*** AKS
+
+*** 
+
+** Amazon AWS
+
+*** EKS
+
+*** EKS/Fargate
+
+** Digital Ocean
+
 * Openshift
 
 ** Start
@@ -171,8 +207,6 @@ qr https://tinyurl.com/s72zqlg > images/kharkivpy.png
     yay minishift # bin
     minishift start --vm-driver virtualbox
     #+END_SRC
-
-
 
 * Presentation build with
 

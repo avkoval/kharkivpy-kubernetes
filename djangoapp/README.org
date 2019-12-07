@@ -1,0 +1,339 @@
+#+SETUPFILE: org-html-themes/setup/theme-readtheorg-local.setup
+
+#+TITLE: Helloworld Developers documentation
+
+
+* Pre-reqiuisites
+
+ - Python3 must be installed in the system
+ - Docker is not strictly required, but assumed for the installation process explained in next chapters
+
+** Directory tree
+
+    #+BEGIN_EXAMPLE
+    Directory tree
+    ==============
+    [-] helloworld
+     |--[-] docker
+     |   |--[+] ansible
+     |   |--[+] scripts
+     |   |--[-] settings
+     |   |   |----- django.env
+     |   |   |----- nodejs.env
+     |   |   `----- services.env
+     |   `--[+] syslog-ng
+     |--[-] requirements
+     |   |----- base.in
+     |   |----- base.in.orig
+     |   |----- base.txt
+     |   |----- base.txt.orig
+     |   |----- dev.in
+     |   |----- dev.in.orig
+     |   |----- dev.txt
+     |   |----- dev.txt.orig
+     |   |----- docker.txt
+     |   |----- prod.in
+     |   `----- prod.txt
+     |----- Dockerfile
+     |----- Makefile
+     |----- README.org
+     `----- docker-compose.yml
+    #+END_EXAMPLE
+
+  - Django settings are situated in ~settings~ folder
+
+* Installation details
+** Using docker (recommended)
+
+    #+BEGIN_EXAMPLE
+    make setup
+    make start
+    #+END_EXAMPLE
+
+    /More docker commands: make help/
+
+**** Initialize models in database
+
+      #+BEGIN_EXAMPLE
+      make migrate
+      #+END_EXAMPLE
+
+*** Define local variables
+
+ - Look into docker/settings
+ - Override them by placing variable into .env of project
+
+* Directly into system
+** Short
+  run this in your project dir
+
+  #+BEGIN_EXAMPLE bash
+  echo "from .default_settings import * " >> helloworld/settings.py
+  python3 -m venv env
+  source env/bin/activate
+  pip install -r requirements/base.txt -r requirements/dev.txt
+  ./manage.py migrate
+  ./manage.py collectstatic --noinput # optional, only for nginx
+  #+END_EXAMPLE
+
+** Python
+*** Ubuntu: python3
+
+ Python update
+ https://stackoverflow.com/questions/42662104/how-to-install-pip-for-python-3-6-on-ubuntu-16-10
+
+ Virtualenv installation python3.6:
+ #+BEGIN_EXAMPLE
+ python3 -m venv env
+ #+END_EXAMPLE
+
+* Update ’demo’ servers                                          :depricated:
+
+/Note, this section only apply to UA2WEB hosted servers! For new deployment see deployment/README.xxx/
+
+** Update main demo server
+
+#+BEGIN_EXAMPLE
+make deploy site=demo.dev.helloworld.net
+#+END_EXAMPLE
+
+** Install different branch on remote server
+
+#+BEGIN_EXAMPLE
+make deploy site=$NAME.dev.helloworld.net
+#+END_EXAMPLE
+
+Note, to deploy non-default branch you will need to override it via host-vars:
+
+#+BEGIN_EXAMPLE yaml
+deployment:
+  branch: master
+#+END_EXAMPLE
+
+** "Refresh" current branch
+
+Meanwhile just follow whole update procedure.
+
+* Remove/reinstall PostgreSQL database
+
+In some cases you will need to start from scratch, e.g. in cases when you switched branches and your
+database schema is no longer valid (you can't roll back it). In such cases, simplest thing to do:
+remove your database completely.
+
+** In docker
+
+Doing this in docker is easy:
+
+#+BEGIN_EXAMPLE
+docker volume rm helloworld_db
+#+END_EXAMPLE
+
+** On remote server
+
+/Note, this section only apply to UA2WEB hosted servers! For new deployment see deployment/README.xxx/
+Login to remote server via SSH (ex: /ssh:client@HOSTNAME.dev.helloworld.net#12082:/var/www/htdocs) and then:
+#+BEGIN_EXAMPLE
+source env/bin/activate
+./manage.py dbshell
+\c template1;
+delete database HOSTNAME_dev_helloworld_com;
+create database HOSTNAME_dev_helloworld_com;
+#+END_EXAMPLE
+
+* Get & install production db
+** Get db
+/(this is old, for new dumps from Kubernetes cluster see provision/README.xxx)/
+
+#+BEGIN_EXAMPLE
+make get_dump site="demo.helloworld.net"
+#+END_EXAMPLE
+
+** Install latest dump
+#+BEGIN_EXAMPLE
+make import_dump
+#+END_EXAMPLE
+* Checking migrations
+
+Before submitting new migrations, the following checks should work:
+
+   #+BEGIN_EXAMPLE
+   make migrate
+   make test
+   #+END_EXAMPLE
+
+* Secrets & security, keys в vault
+** How to add new team member to GPG keyring
+Just add this member GPG public key in ASCII format in gpg_keys with KEY_ID as prefix, e.g.:
+
+Examples:
+#+BEGIN_EXAMPLE
+[-] gpg_keys
+ |----- 00AA19ED7AD0481A_Alex_V_Koval.txt
+ |----- 142DB55D537386E1_Vitali_Malicky.txt
+ |----- 301D397EC44DA3C3_Petr_Shapovalov.txt
+ |----- 380F47E8A35A55D4_Artem_Smirnov.txt
+ |----- 6953528C9CA7DE2F_Alexandr_Lextor.txt
+ |----- 6D1276EF47BBEF7B_Alexandr_Svyrydov
+ |----- 84562FDFF332FDBA_Nataliia_Dulger.txt
+ |----- B4B00C9BD165E2CB_Andrey_Gerasimov.txt
+ |----- E0CC6D9196462885_Alan_Nosenkis.txt
+ `----- F715505922D5BCE1_Savchenko_Andrey.txt
+#+END_EXAMPLE
+
+** How to encrypt .vaultfile
+*** To encrypt .vaultfile
+
+To encrypt .vaultfile (or any other file) do this:
+
+#+BEGIN_SRC sh :results output replace :async t
+bin/gpg_encrypt.sh .vaultfile
+#+END_SRC
+
+*** Sending secret messages
+
+To send secret message to all team members do this:
+
+#+BEGIN_EXAMPLE
+bin/gpg_encrypt.sh
+#+END_EXAMPLE
+
+/Finish with Control+D/
+
+*** How to decrypt .vaultfile.gpg
+
+#+BEGIN_SRC sh :results output replace :async t
+cat .vaultfile.gpg | gpg -d > .vaultfile
+#+END_SRC
+
+** Как внести изменения в секреты:
+
+ - Путь docker/ansible/vars/
+ - Редактирование ansible-vault edit docker/ansible/vars/settings.vault.yaml --vault-password-file=.vaultfile
+ - Запуск make setup
+
+* Automated tests
+** Unit tests
+
+Running all tests:
+
+#+BEGIN_EXAMPLE
+make test
+#+END_EXAMPLE
+
+Running specific test case[s]:
+
+#+BEGIN_EXAMPLE
+make test arg="product"
+#+END_EXAMPLE
+
+Run specific test case:
+
+#+BEGIN_EXAMPLE
+make test arg="app.tests.somefile"
+make test arg="app.tests.somefile:TestClass"
+make test arg="app.tests.somefile:TestClass.test_method"
+#+END_EXAMPLE
+
+** Coverage
+
+Coverate test indicates how many actual lines of code are coverted by unit tests.
+
+#+BEGIN_EXAMPLE
+make coverge
+#+END_EXAMPLE
+
+(it will create coverage/coverage_html_report)
+
+** Selenium
+*** Introduction
+
+Some very generic test cases, which don't fit into exact application can be placed into generic
+folder of acceptance/tests but other tests to be located in corresponding project folders. 
+
+For a convinience, should inherit from acceptance.SeleniumTestcase which define all necessary
+engine specifications for running selenium in Docker.
+
+#+BEGIN_EXAMPLE
+from acceptance import SeleniumTestCase, SCREEN_SIZES
+#+END_EXAMPLE
+
+SCREEN_SIZES are taken from current Google Analytics data and contain 10 most used screen sizes.
+
+The idea of those tests is to test how images compare - thus, the data should be appropriately created
+and replicated _in the same manner_ for every next test run.
+
+More information about this topic can be found in modules documentation:
+- [[https://selenium-python.readthedocs.io/][Selenium for Python]]
+- [[https://docs.djangoproject.com/en/2.2/topics/testing/tools/#liveservertestcase][Django LiveServerTestCase]]
+- [[https://github.com/python-needle/needle][Needle]]
+
+
+*** VNC
+
+Current image uses Firefox with VNC capabilities, it is available on ~localhost:5905~ with password: ~secret~.
+
+*** Saving baseline images
+
+#+BEGIN_EXAMPLE
+make test arg="acceptance.tests.test_homepage -s --with-save-baseline"
+#+END_EXAMPLE
+
+*** Running selenium tests on host computer (without docker)
+
+It is possible but not very recommended due to number of additional steps which needs to be done: why at all
+use it in standalone when VNC provides good enough envoronment? Anyway, for those who interested, here is how
+it can be done:
+
+**** Prepare node/frontend files
+
+#+BEGIN_EXAMPLE
+cd frontend
+npm i
+yarn install --no-cache --frozen-lockfile
+yarn build-dev
+#+END_EXAMPLE
+
+**** Copy & customize test_settings.py to settings.py
+
+Normally you will need to customize the following variables (take a look at example-settings.py)
+
+ - DATABASES
+ - EMAIL_BACKEND
+ - SMS_DEBUG = DEBUG = TEMPLATE_DEBUG
+ - REDIS_PORT
+ - CHANNEL_LAYERSCELERY_RESULT_BACKEND
+
+to use those from either your host or docker.
+
+* Using test data
+  This project has a set of functions to populate database with test data. Please read more on command line
+  arguments, but here is short intro:
+
+  #+BEGIN_EXAMPLE
+      make dbinit
+      make manage arg="add_obj1 -n 100"
+      make manage arg="add_obj2 -n 500"
+  #+END_EXAMPLE
+
+* How to edit this README.org
+
+  [[https://orgmode.org/][Org-mode/]] is a [[https://www.gnu.org/software/emacs/][Emacs package]]. Some other editors support editing of org-mode files ([[https://marketplace.visualstudio.com/items?itemName=tootone.org-mode][VS Code]], [[https://atom.io/packages/org-mode][Atom]], etc) but
+  it makes less sense in our case you will need to 'export' data into HTML/Markdown formats when you finished your
+  edit, so it makes sense to install Emacs and edit it there.
+
+  Exporting:
+  - HTML - https://orgmode.org/manual/HTML-export-commands.html#HTML-export-commands - ~C-c C-e h h (org-html-export-to-html)~
+  - Markdown - https://orgmode.org/manual/Markdown-Export.html#Markdown-Export - ~C-c C-e m m (org-md-export-to-markdown)~
+
+  I am using theme from: https://github.com/fniessen/org-html-themes:
+  #+BEGIN_SRC sh :results output replace :async t
+  git clone https://github.com/fniessen/org-html-themes.git
+  #+END_SRC
+
+  Note: if all of this looks too complicated, you can export raw HTML using [[https://pandoc.org/][pandoc]] (/its not very beautiful, but works):
+
+  #+BEGIN_EXAMPLE
+  pandoc README.org -o README.html
+  pandoc README.org -o README.md
+  #+END_EXAMPLE
+

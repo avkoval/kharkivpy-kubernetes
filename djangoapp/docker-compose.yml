@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:12.0
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./dumps:/dumps
+    ports:
+      - ${HOST_POSTGRES_PORT}:${POSTGRES_PORT}
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+
+  # our local web service mapped to $HOST_YAKAVA_PORT
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - USER_UID=${USER_UID}
+        - USER_GID=${USER_GID}
+    volumes:
+      - .:/worker/code
+    command: /worker/code/docker/scripts/start.sh web
+    image: hello/web:${GIT_BRANCH-latest}
+    stdin_open: true
+    tty: true
+    user: worker
+    ports:
+      - "$HOST_WEB_PORT:8000"
+    env_file:
+      - ./docker/settings/django.env
+      - ./docker/settings/services.env
+      # - ./.secret-vars.env
+      - ./.env
+    depends_on:
+      - db
+
+volumes:
+  db:

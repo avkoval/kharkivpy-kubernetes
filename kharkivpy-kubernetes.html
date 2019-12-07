@@ -27,12 +27,12 @@
 <div class="reveal">
 <div class="slides">
 <section id="sec-title-slide">
-<h1 class="title">Kubernetes for Python developers</h1><h2 class="author">Alex Koval for KharkivPy</h2><p class="date">Created: 2019-12-06 Fri 15:03</p>
+<h1 class="title">Kubernetes for Python developers</h1><h2 class="author">Alex Koval for KharkivPy</h2><p class="date">Created: 2019-12-06 Fri 20:26</p>
 </section>
 
 <section>
-<section id="slide-org63fd8cf">
-<h2 id="org63fd8cf">QR-code</h2>
+<section id="slide-org1cbfa64">
+<h2 id="org1cbfa64">QR-code</h2>
 
 <div class="figure">
 <p><img src="./images/kharkivpy.png" alt="kharkivpy.png" />
@@ -40,8 +40,8 @@
 </div>
 
 </section>
-<section id="slide-org18bc131">
-<h3 id="org18bc131">Who am I</h3>
+<section id="slide-orge980733">
+<h3 id="orge980733">Who am I</h3>
 <p>
 avkoval (bitbucket, github)
 <del><a href="http://alex.koval.kharkov.ua">http://alex.koval.kharkov.ua</a></del>
@@ -57,8 +57,8 @@ avkoval (bitbucket, github)
 </section>
 </section>
 <section>
-<section id="slide-orgd2a8ecc">
-<h2 id="orgd2a8ecc">Why kubernetes</h2>
+<section id="slide-org8ed133e">
+<h2 id="org8ed133e">Why kubernetes</h2>
 <ul>
 <li>Fast scaling (container based, declarative objects configuration)</li>
 <li>Fault tolerant (e.g. failures on nodes are not critical)</li>
@@ -71,8 +71,8 @@ avkoval (bitbucket, github)
 </ul>
 
 </section>
-<section id="slide-org70b9add">
-<h3 id="org70b9add">Why (when) not</h3>
+<section id="slide-org24b32ac">
+<h3 id="org24b32ac">Why (when) not</h3>
 <ul>
 <li>overall more complex configuration which certainly requires an additional skills</li>
 <li>for a small application could be overkill as it requires a lot of <i>overhead</i>, e.g.
@@ -83,8 +83,8 @@ several nodes, masters, infra, other services will eat a lot of CPU/RAM resource
 </section>
 </section>
 <section>
-<section id="slide-org157b103">
-<h2 id="org157b103">Architecture</h2>
+<section id="slide-org278757a">
+<h2 id="org278757a">Architecture</h2>
 
 <div class="figure">
 <p><img src="./images/arch1.jpg" alt="arch1.jpg" />
@@ -92,8 +92,8 @@ several nodes, masters, infra, other services will eat a lot of CPU/RAM resource
 </div>
 
 </section>
-<section id="slide-org9e47028">
-<h3 id="org9e47028">infrastructure questions not solved by kubernetes</h3>
+<section id="slide-org850a8b4">
+<h3 id="org850a8b4">infrastructure questions not solved by kubernetes</h3>
 <ol>
 <li>ingress, load balancers</li>
 <li>infra services - CNI</li>
@@ -103,22 +103,22 @@ several nodes, masters, infra, other services will eat a lot of CPU/RAM resource
 </section>
 </section>
 <section>
-<section id="slide-org447413a">
-<h2 id="org447413a">Working with cluster - basics</h2>
-<div class="outline-text-2" id="text-org447413a">
+<section id="slide-org2864c1d">
+<h2 id="org2864c1d">Working with cluster - basics</h2>
+<div class="outline-text-2" id="text-org2864c1d">
 </div>
 </section>
-<section id="slide-org5aa60c1">
-<h3 id="org5aa60c1">kubectl common commands</h3>
-<div class="outline-text-3" id="text-org5aa60c1">
+<section id="slide-org1845be2">
+<h3 id="org1845be2">kubectl common commands</h3>
+<div class="outline-text-3" id="text-org1845be2">
 </div>
 </section>
-<section id="slide-org2c7b8fd">
-<h4 id="org2c7b8fd">namespaces</h4>
-<div class="outline-text-4" id="text-org2c7b8fd">
+<section id="slide-org9a8c581">
+<h4 id="org9a8c581">namespaces</h4>
+<div class="outline-text-4" id="text-org9a8c581">
 </div>
 <ul class="org-ul">
-<li><a id="orgcb78b04"></a>kubectl get namespaces<br />
+<li><a id="org7c1f2cc"></a>kubectl get namespaces<br />
 <div class="org-src-container">
 
 <pre  class="src src-tmux">kubectl get namespaces
@@ -133,12 +133,12 @@ applications.
 </ul>
 
 </section>
-<section id="slide-orge58d9d8">
-<h4 id="orge58d9d8">kubectl pods</h4>
-<div class="outline-text-4" id="text-orge58d9d8">
+<section id="slide-org91b7cc9">
+<h4 id="org91b7cc9">kubectl pods</h4>
+<div class="outline-text-4" id="text-org91b7cc9">
 </div>
 <ul class="org-ul">
-<li><a id="orgd7da7c1"></a>get pods<br />
+<li><a id="orgabefba7"></a>get pods<br />
 <div class="org-src-container">
 
 <pre  class="src src-tmux">kubectl get pods
@@ -146,7 +146,7 @@ applications.
 </div>
 </li>
 
-<li><a id="orgef118ee"></a>delete pod<br />
+<li><a id="orgf6ef88c"></a>delete pod<br />
 <div class="org-src-container">
 
 <pre  class="src src-tmux"><span style="color: #8c8c8c;"># </span><span style="color: #8c8c8c;">kubectl delete pod </span>
@@ -155,7 +155,7 @@ applications.
 </li>
 
 
-<li><a id="orgd06c362"></a>exec -it<br />
+<li><a id="org5191a2d"></a>exec -it<br />
 <div class="org-src-container">
 
 <pre  class="src src-tmux"><span style="color: #8c8c8c;"># </span><span style="color: #8c8c8c;">kubectl exec -it ...</span>
@@ -165,12 +165,12 @@ applications.
 </ul>
 
 </section>
-<section id="slide-org573915e">
-<h4 id="org573915e">node</h4>
-<div class="outline-text-4" id="text-org573915e">
+<section id="slide-org8cb72b1">
+<h4 id="org8cb72b1">node</h4>
+<div class="outline-text-4" id="text-org8cb72b1">
 </div>
 <ul class="org-ul">
-<li><a id="org7441f2d"></a>get nodes<br />
+<li><a id="org172f2c4"></a>get nodes<br />
 <div class="org-src-container">
 
 <pre  class="src src-tmux">kubectl get nodes
@@ -181,19 +181,19 @@ kubectl describe node minikube
 </ul>
 
 </section>
-<section id="slide-orgc5f97a5">
-<h3 id="orgc5f97a5">Helm</h3>
+<section id="slide-org99ad610">
+<h3 id="org99ad610">Helm</h3>
 <p>
 <a href="https://helm.sh/">https://helm.sh/</a>
 </p>
 
 </section>
-<section id="slide-org836cc9f">
-<h4 id="org836cc9f">Installing some ready packages</h4>
-<div class="outline-text-4" id="text-org836cc9f">
+<section id="slide-org28ef0cf">
+<h4 id="org28ef0cf">Installing some ready packages</h4>
+<div class="outline-text-4" id="text-org28ef0cf">
 </div>
 <ul class="org-ul">
-<li><a id="org428e97e"></a>search &amp; install<br />
+<li><a id="org03d64df"></a>search &amp; install<br />
 <div class="org-src-container">
 
 <pre  class="src src-tmux">helm search repo stable
@@ -202,7 +202,7 @@ helm install mymysql stable/mysql
 </div>
 </li>
 
-<li><a id="org99263b8"></a>uninstall<br />
+<li><a id="orga20d194"></a>uninstall<br />
 <ol>
 <li><p>
 List <code>helm ls</code>
@@ -228,12 +228,72 @@ Uninstall
 </li>
 </ul>
 
+</section>
+</section>
+<section>
+<section id="slide-orgd58e81c">
+<h2 id="orgd58e81c">create own app</h2>
+<div class="outline-text-2" id="text-orgd58e81c">
+</div>
+</section>
+<section id="slide-org2e45faf">
+<h3 id="org2e45faf">registry</h3>
+<div class="org-src-container">
+
+<pre  class="src src-tmux">kubectl create -f https://gist.githubusercontent.com/coco98/b750b3debc6d517308596c248daf3bb1/raw/6efc11eb8c2dce167ba0a5e557833cc4ff38fa7c/kube-registry.yaml
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-tmux">kubectl port-forward --namespace kube-system $(kubectl get po -n kube-system | grep kube-registry-v0 | \awk <span style="color: #00008b; font-style: italic;">'{print $1;}'</span>) 5000:5000
+</pre>
+</div>
+
+
 
 </section>
 </section>
 <section>
-<section id="slide-org88c1e6d">
-<h2 id="org88c1e6d">Presentation build with</h2>
+<section id="slide-orgc4b7aca">
+<h2 id="orgc4b7aca">Providers</h2>
+<div class="outline-text-2" id="text-orgc4b7aca">
+</div>
+</section>
+<section id="slide-orgfa7d33b">
+<h3 id="orgfa7d33b">Google</h3>
+<ul>
+<li>Google Kubernetes Engine <a href="https://cloud.google.com/kubernetes-engine/">https://cloud.google.com/kubernetes-engine/</a></li>
+
+</ul>
+
+</section>
+<section id="slide-org64e5fa6">
+<h3 id="org64e5fa6">Amazon AWS</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org69a833a">
+<h2 id="org69a833a">Openshift</h2>
+<div class="outline-text-2" id="text-org69a833a">
+</div>
+</section>
+<section id="slide-org6937308">
+<h3 id="org6937308">Start</h3>
+<div class="org-src-container">
+
+<pre  class="src src-tmux">yay minishift <span style="color: #8c8c8c;"># </span><span style="color: #8c8c8c;">bin</span>
+minishift start --vm-driver virtualbox
+</pre>
+</div>
+
+
+</section>
+</section>
+<section>
+<section id="slide-orgff52c0f">
+<h2 id="orgff52c0f">Presentation build with</h2>
 <ul>
 <li><a href="https://github.com/yjwen/org-reveal/">org-reveal</a></li>
 <li><a href="https://revealjs.com/">Reveal.js</a></li>
