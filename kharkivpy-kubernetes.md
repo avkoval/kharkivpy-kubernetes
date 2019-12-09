@@ -81,13 +81,14 @@ yay kubernetes-helm # aur/kubernetes-helm-bin
 minikube start --vm-driver=virtualbox
 ```
 
-## Point to local minikube docker
+## Point environment to local minikube docker
 
-1.  environment & helm init
-    
-    ``` tmux
-    eval $(minikube docker-env) 
-    ```
+When those are initialized - *minikube* docker is used directly, so no
+dedicated registry service is required
+
+``` tmux
+eval $(minikube docker-env) 
+```
 
 ## Helm
 
@@ -205,6 +206,19 @@ RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--"]
 ```
 
+### build app
+
+We use `make` as wrapper:
+
+``` tmux
+cd ~/dev/kharkivpy-kubernetes/djangoapp/
+make build-prod
+```
+
+As we initialized minikube environment [Point environment to local
+minikube docker](#*Point%20environment%20to%20local%20minikube%20docker)
+- the image is being built and stored with `minikube`.
+
 ## Helm
 
 Helm provides a template, create it for example this way:
@@ -219,8 +233,21 @@ Now, lets compare…
 ## Install this app chart
 
 ``` tmux
-
+helm install helloworld ~/dev/kharkivpy-kubernetes/djangoapp/helm
 ```
+
+## Port forward
+
+Because we don't have any ingress proxies configured lets expose
+container directly:
+
+``` tmux
+kubectl port-forward helloworld-f5cc67f9b-6dr7x 8000:8000
+```
+
+… and point your browser at <http://localhost:8080> to see django app:
+
+![](./images/ss_20191209131818_FA54C2V1HZcnat4XZoL2.png)
 
 # Providers
 

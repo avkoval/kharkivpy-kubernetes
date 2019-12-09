@@ -27,12 +27,12 @@
 <div class="reveal">
 <div class="slides">
 <section id="sec-title-slide">
-<h1 class="title">Kubernetes for Python developers</h1><h2 class="author">Alex Koval for KharkivPy</h2><p class="date">Created: 2019-12-07 Sat 11:33</p>
+<h1 class="title">Kubernetes for Python developers</h1><h2 class="author">Alex Koval for KharkivPy</h2><p class="date">Created: 2019-12-09 Mon 13:19</p>
 </section>
 
 <section>
-<section id="slide-org44150af">
-<h2 id="org44150af">QR-code</h2>
+<section id="slide-orgef2e3f7">
+<h2 id="orgef2e3f7">QR-code</h2>
 
 <div class="figure">
 <p><img src="./images/kharkivpy.png" alt="kharkivpy.png" />
@@ -40,8 +40,8 @@
 </div>
 
 </section>
-<section id="slide-org8ff68e4">
-<h3 id="org8ff68e4">Who am I</h3>
+<section id="slide-orgf108a53">
+<h3 id="orgf108a53">Who am I</h3>
 <p>
 avkoval (bitbucket, github)
 <del><a href="http://alex.koval.kharkov.ua">http://alex.koval.kharkov.ua</a></del>
@@ -57,8 +57,8 @@ avkoval (bitbucket, github)
 </section>
 </section>
 <section>
-<section id="slide-org76d9f9a">
-<h2 id="org76d9f9a">Why kubernetes</h2>
+<section id="slide-org160556f">
+<h2 id="org160556f">Why kubernetes</h2>
 <ul>
 <li>Fast scaling (container based, declarative objects configuration)</li>
 <li>Fault tolerant (e.g. failures on nodes are not critical)</li>
@@ -76,8 +76,8 @@ avkoval (bitbucket, github)
 </ul>
 
 </section>
-<section id="slide-org0e9190d">
-<h3 id="org0e9190d">Deployment strategies</h3>
+<section id="slide-orgd3e4478">
+<h3 id="orgd3e4478">Deployment strategies</h3>
 <ul>
 <li><b>RollingUpdate</b> (efs)</li>
 <li><b>Recreate</b> (All existing Pods are killed before new ones are created when)
@@ -95,8 +95,8 @@ avkoval (bitbucket, github)
 </ul>
 
 </section>
-<section id="slide-orgbba02ae">
-<h3 id="orgbba02ae">Why (when) not</h3>
+<section id="slide-org889ebaf">
+<h3 id="org889ebaf">Why (when) not</h3>
 <ol>
 <li>For a <b>small</b> application could be overkill as it requires a lot of <i>overhead</i>, e.g.
 several nodes, masters, other services will eat a lot of CPU/RAM resources making this
@@ -111,8 +111,8 @@ to handle.</li>
 </section>
 </section>
 <section>
-<section id="slide-org50484b1">
-<h2 id="org50484b1">Architecture</h2>
+<section id="slide-orge6215db">
+<h2 id="orge6215db">Architecture</h2>
 <p>
 <a href="https://platform9.com/blog/kubernetes-enterprise-chapter-2-kubernetes-architecture-concepts/">https://platform9.com/blog/kubernetes-enterprise-chapter-2-kubernetes-architecture-concepts/</a>
 </p>
@@ -137,8 +137,8 @@ to handle.</li>
 </p>
 
 </section>
-<section id="slide-orgeb1e1c7">
-<h3 id="orgeb1e1c7">infrastructure questions not solved by kubernetes</h3>
+<section id="slide-org34a8ba7">
+<h3 id="org34a8ba7">infrastructure questions not solved by kubernetes</h3>
 <ol>
 <li>required from cloud:
 <ol>
@@ -152,15 +152,15 @@ to handle.</li>
 </section>
 </section>
 <section>
-<section id="slide-orgb7aded7">
-<h2 id="orgb7aded7">Working with cluster - basics</h2>
+<section id="slide-org3abac27">
+<h2 id="org3abac27">Working with cluster - basics</h2>
 <p>
 Based on minikube as simplest to try.
 </p>
 
 </section>
-<section id="slide-org84d5630">
-<h3 id="org84d5630">Install <a href="https://github.com/kubernetes/minikube">minikube</a>, kubectl, helm</h3>
+<section id="slide-orgac27c09">
+<h3 id="orgac27c09">Install <a href="https://github.com/kubernetes/minikube">minikube</a>, kubectl, helm</h3>
 <div class="org-src-container">
 
 <pre  class="src src-tmux">sudo pacman -S minikube
@@ -175,13 +175,13 @@ Based on minikube as simplest to try.
 
 <div class="org-src-container">
 
-<pre  class="src src-tmux">yay kubernetes-helm <span style="color: #838b83; font-style: italic;"># </span><span style="color: #838b83; font-style: italic;">aur/kubernetes-helm-bin</span>
+<pre  class="src src-tmux">yay kubernetes-helm <span style="color: #5c545b;"># </span><span style="color: #797379;">aur/kubernetes-helm-bin</span>
 </pre>
 </div>
 
 </section>
-<section id="slide-org6675c86">
-<h3 id="org6675c86">Start minikube</h3>
+<section id="slide-org3f77c0c">
+<h3 id="org3f77c0c">Start minikube</h3>
 <div class="org-src-container">
 
 <pre  class="src src-tmux">minikube start --vm-driver=virtualbox
@@ -189,31 +189,28 @@ Based on minikube as simplest to try.
 </div>
 
 </section>
-<section id="slide-org6f43287">
-<h3 id="org6f43287">Point to local minikube docker</h3>
-<ol>
-<li><p>
-environment &amp; helm init
+<section id="slide-org4ef8cd9">
+<h3 id="org4ef8cd9">Point environment to local minikube docker</h3>
+<p>
+When those are initialized - <i>minikube</i> docker is used directly, so no dedicated registry service is required
 </p>
 
 <div class="org-src-container">
 
-<pre  class="src src-tmux"><span style="color: #00ff00;">eval</span> $(minikube docker-env) 
+<pre  class="src src-tmux"><span style="color: #149b93;">eval</span> $(minikube docker-env) 
 </pre>
-</div></li>
-
-</ol>
+</div>
 
 </section>
-<section id="slide-org738f0f9">
-<h3 id="org738f0f9">Helm</h3>
+<section id="slide-orgcbe1b22">
+<h3 id="orgcbe1b22">Helm</h3>
 <p>
 <a href="https://helm.sh/">https://helm.sh/</a>
 </p>
 
 </section>
-<section id="slide-org523a572">
-<h4 id="org523a572">Helm repo</h4>
+<section id="slide-org080d086">
+<h4 id="org080d086">Helm repo</h4>
 <ol>
 <li><p>
 add repo
@@ -249,12 +246,12 @@ install
 </ol>
 
 </section>
-<section id="slide-orgf9c449d">
-<h4 id="orgf9c449d">Installing some ready packages</h4>
-<div class="outline-text-4" id="text-orgf9c449d">
+<section id="slide-org767a196">
+<h4 id="org767a196">Installing some ready packages</h4>
+<div class="outline-text-4" id="text-org767a196">
 </div>
 <ul class="org-ul">
-<li><a id="orgf70ef4f"></a>search &amp; install<br />
+<li><a id="orgf8b50a0"></a>search &amp; install<br />
 <div class="org-src-container">
 
 <pre  class="src src-tmux">helm search repo stable
@@ -263,7 +260,7 @@ helm install mymysql stable/mysql
 </div>
 </li>
 
-<li><a id="orgb2e352d"></a>uninstall<br />
+<li><a id="org54a4ad3"></a>uninstall<br />
 <ol>
 <li><p>
 List <code>helm ls</code>
@@ -290,17 +287,17 @@ Uninstall
 </ul>
 
 </section>
-<section id="slide-org0b57734">
-<h3 id="org0b57734">kubectl common commands</h3>
-<div class="outline-text-3" id="text-org0b57734">
+<section id="slide-org5e0a50c">
+<h3 id="org5e0a50c">kubectl common commands</h3>
+<div class="outline-text-3" id="text-org5e0a50c">
 </div>
 </section>
-<section id="slide-orgc7132aa">
-<h4 id="orgc7132aa">namespaces</h4>
-<div class="outline-text-4" id="text-orgc7132aa">
+<section id="slide-org5f971a8">
+<h4 id="org5f971a8">namespaces</h4>
+<div class="outline-text-4" id="text-org5f971a8">
 </div>
 <ul class="org-ul">
-<li><a id="org7e4deab"></a>kubectl get namespaces<br />
+<li><a id="org95bcd9e"></a>kubectl get namespaces<br />
 <div class="org-src-container">
 
 <pre  class="src src-tmux">kubectl get namespaces
@@ -315,12 +312,12 @@ applications.
 </ul>
 
 </section>
-<section id="slide-org28e93c3">
-<h4 id="org28e93c3">kubectl pods</h4>
-<div class="outline-text-4" id="text-org28e93c3">
+<section id="slide-orgce5a5af">
+<h4 id="orgce5a5af">kubectl pods</h4>
+<div class="outline-text-4" id="text-orgce5a5af">
 </div>
 <ul class="org-ul">
-<li><a id="org9161284"></a>get pods<br />
+<li><a id="org12b55d0"></a>get pods<br />
 <div class="org-src-container">
 
 <pre  class="src src-tmux">kubectl get pods
@@ -328,30 +325,30 @@ applications.
 </div>
 </li>
 
-<li><a id="org7c3847a"></a>delete pod<br />
+<li><a id="orgb14adfd"></a>delete pod<br />
 <div class="org-src-container">
 
-<pre  class="src src-tmux"><span style="color: #838b83; font-style: italic;"># </span><span style="color: #838b83; font-style: italic;">kubectl delete pod </span>
+<pre  class="src src-tmux"><span style="color: #5c545b;"># </span><span style="color: #797379;">kubectl delete pod </span>
 </pre>
 </div>
 </li>
 
-<li><a id="org20cba41"></a>exec -it<br />
+<li><a id="org2e269e9"></a>exec -it<br />
 <div class="org-src-container">
 
-<pre  class="src src-tmux"><span style="color: #838b83; font-style: italic;"># </span><span style="color: #838b83; font-style: italic;">kubectl exec -it ...</span>
+<pre  class="src src-tmux"><span style="color: #5c545b;"># </span><span style="color: #797379;">kubectl exec -it ...</span>
 </pre>
 </div>
 </li>
 </ul>
 
 </section>
-<section id="slide-org3754aba">
-<h4 id="org3754aba">node</h4>
-<div class="outline-text-4" id="text-org3754aba">
+<section id="slide-org6b02516">
+<h4 id="org6b02516">node</h4>
+<div class="outline-text-4" id="text-org6b02516">
 </div>
 <ul class="org-ul">
-<li><a id="org75199bd"></a>get nodes<br />
+<li><a id="org25fd79c"></a>get nodes<br />
 <div class="org-src-container">
 
 <pre  class="src src-tmux">kubectl get nodes
@@ -364,13 +361,13 @@ kubectl describe node minikube
 </section>
 </section>
 <section>
-<section id="slide-org1c4fd28">
-<h2 id="org1c4fd28">Create own app</h2>
-<div class="outline-text-2" id="text-org1c4fd28">
+<section id="slide-org49c784c">
+<h2 id="org49c784c">Create own app</h2>
+<div class="outline-text-2" id="text-org49c784c">
 </div>
 </section>
-<section id="slide-org1059028">
-<h3 id="org1059028">Dockerfile</h3>
+<section id="slide-orgf3e877e">
+<h3 id="orgf3e877e">Dockerfile</h3>
 <p>
 <a href="file:///home/k/dev/kharkivpy-kubernetes/djangoapp/Dockerfile.prod">file:///home/k/dev/kharkivpy-kubernetes/djangoapp/Dockerfile.prod</a>
 </p>
@@ -395,16 +392,35 @@ RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--"]
 </pre>
 
+
 </section>
-<section id="slide-org38439a9">
-<h3 id="org38439a9">Helm</h3>
+<section id="slide-org35ff1b7">
+<h4 id="org35ff1b7">build app</h4>
+<p>
+We use <code>make</code> as wrapper:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-tmux"><span style="color: #149b93;">cd</span> ~/dev/kharkivpy-kubernetes/djangoapp/
+make build-prod
+</pre>
+</div>
+
+<p class="backwardlink">
+As we initialized minikube environment <a href="#/slide-org4ef8cd9" class="backwardlink">in one of previous steps</a> - the image is being built and stored with <code>minikube</code>.
+</p>
+
+</section>
+<section id="slide-org8260ba2">
+<h3 id="org8260ba2">Helm</h3>
 <p>
 Helm provides a template, create it for example this way:
 </p>
 
 <div class="org-src-container">
 
-<pre  class="src src-sh">mkdir -p helm.new &amp;&amp; <span style="color: #00ff00;">cd</span> helm.new &amp;&amp; rm -rf helloworld
+<pre  class="src src-sh">mkdir -p helm.new &amp;&amp; <span style="color: #149b93;">cd</span> helm.new &amp;&amp; rm -rf helloworld
 helm create helloworld
 </pre>
 </div>
@@ -414,60 +430,83 @@ Now, lets compare&#x2026;
 </p>
 
 </section>
-<section id="slide-orgbc0cb1f">
-<h3 id="orgbc0cb1f">Install this app chart</h3>
+<section id="slide-orgfdbfa8b">
+<h3 id="orgfdbfa8b">Install this app chart</h3>
 <div class="org-src-container">
 
-<pre  class="src src-tmux">
+<pre  class="src src-tmux">helm install helloworld ~/dev/kharkivpy-kubernetes/djangoapp/helm
 </pre>
+</div>
+
+</section>
+<section id="slide-org2a4f0aa">
+<h3 id="org2a4f0aa">Port forward</h3>
+<p>
+Because we don't have any ingress proxies configured lets expose container directly:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-tmux">kubectl port-forward helloworld-f5cc67f9b-6dr7x 8000:8000
+</pre>
+</div>
+
+<p>
+&#x2026; and point your browser at <a href="http://localhost:8080">http://localhost:8080</a> to see django app:
+</p>
+
+
+<div class="figure">
+<p><img src="./images/ss_20191209131818_FA54C2V1HZcnat4XZoL2.png" alt="ss_20191209131818_FA54C2V1HZcnat4XZoL2.png" />
+</p>
 </div>
 
 </section>
 </section>
 <section>
-<section id="slide-orgcec82f0">
-<h2 id="orgcec82f0">Providers</h2>
+<section id="slide-orgda3ab2c">
+<h2 id="orgda3ab2c">Providers</h2>
 <p>
 <a href="https://kubernetes.io/docs/concepts/cluster-administration/cloud-providers/">https://kubernetes.io/docs/concepts/cluster-administration/cloud-providers/</a>
 </p>
 
 </section>
-<section id="slide-org06fd748">
-<h3 id="org06fd748">Google</h3>
+<section id="slide-orgc26c413">
+<h3 id="orgc26c413">Google</h3>
 <ul>
 <li>Google Kubernetes Engine <a href="https://cloud.google.com/kubernetes-engine/">https://cloud.google.com/kubernetes-engine/</a></li>
 
 </ul>
 
 </section>
-<section id="slide-org9083683">
-<h3 id="org9083683">Azure</h3>
+<section id="slide-org8e7d830">
+<h3 id="org8e7d830">Azure</h3>
 <p>
 <a href="https://docs.microsoft.com/en-us/azure/aks/">https://docs.microsoft.com/en-us/azure/aks/</a>
 </p>
 
 </section>
-<section id="slide-org083b9d6">
-<h3 id="org083b9d6">Amazon AWS</h3>
-<div class="outline-text-3" id="text-org083b9d6">
+<section id="slide-orgafb9696">
+<h3 id="orgafb9696">Amazon AWS</h3>
+<div class="outline-text-3" id="text-orgafb9696">
 </div>
 </section>
-<section id="slide-orgda17519">
-<h4 id="orgda17519">EKS</h4>
+<section id="slide-orgc4e24b3">
+<h4 id="orgc4e24b3">EKS</h4>
 <p>
 <a href="https://aws.amazon.com/eks/">https://aws.amazon.com/eks/</a>
 </p>
 
 </section>
-<section id="slide-orgad5141f">
-<h4 id="orgad5141f">EKS/Fargate</h4>
+<section id="slide-orgb7692b8">
+<h4 id="orgb7692b8">EKS/Fargate</h4>
 <p>
 <a href="https://aws.amazon.com/fargate/">https://aws.amazon.com/fargate/</a>
 </p>
 
 </section>
-<section id="slide-orgec75289">
-<h3 id="orgec75289">Digital Ocean</h3>
+<section id="slide-orgd669dbe">
+<h3 id="orgd669dbe">Digital Ocean</h3>
 
 <div class="figure">
 <p><img src="./images/ss_20191207081932_INETqRoZVuAGmOPgwSKt.png" alt="ss_20191207081932_INETqRoZVuAGmOPgwSKt.png" />
@@ -492,15 +531,15 @@ Now, lets compare&#x2026;
 </section>
 </section>
 <section>
-<section id="slide-orgb21ddcc">
-<h2 id="orgb21ddcc">A few words about openshift</h2>
+<section id="slide-org0043ef7">
+<h2 id="org0043ef7">A few words about openshift</h2>
 <p>
 <a href="https://cloudowski.com/articles/10-differences-between-openshift-and-kubernetes/">https://cloudowski.com/articles/10-differences-between-openshift-and-kubernetes/</a>
 </p>
 
 </section>
-<section id="slide-orgb582c8e">
-<h3 id="orgb582c8e">Benefits</h3>
+<section id="slide-org597f684">
+<h3 id="org597f684">Benefits</h3>
 <ul>
 <li>Better UI</li>
 <li>Authorization / project / user management out of the box</li>
@@ -509,8 +548,8 @@ Now, lets compare&#x2026;
 </ul>
 
 </section>
-<section id="slide-orgecb5684">
-<h3 id="orgecb5684">Start</h3>
+<section id="slide-org9a5c194">
+<h3 id="org9a5c194">Start</h3>
 <ul>
 <li><a href="https://www.openshift.com/deploying-to-openshift/">https://www.openshift.com/deploying-to-openshift/</a></li>
 <li><a href="https://www.openshift.com/deploying-to-openshift/">https://www.openshift.com/deploying-to-openshift/</a></li>
@@ -518,8 +557,8 @@ Now, lets compare&#x2026;
 </ul>
 
 </section>
-<section id="slide-org9c1d8c8">
-<h3 id="org9c1d8c8">Our experience</h3>
+<section id="slide-org6e5b2a3">
+<h3 id="org6e5b2a3">Our experience</h3>
 <ul>
 <li>More complex to support from DevOps perspective, less info, most of it locked inside of paid
 subscription for RedHat account</li>
@@ -531,13 +570,13 @@ subscription for RedHat account</li>
 </section>
 </section>
 <section>
-<section id="slide-org8972dfe">
-<h2 id="org8972dfe">Complex topics</h2>
-<div class="outline-text-2" id="text-org8972dfe">
+<section id="slide-org52fa9b1">
+<h2 id="org52fa9b1">Complex topics</h2>
+<div class="outline-text-2" id="text-org52fa9b1">
 </div>
 </section>
-<section id="slide-org8ccd6f6">
-<h3 id="org8ccd6f6">Helm - where to store files/configuration variables/secrets?</h3>
+<section id="slide-org1881828">
+<h3 id="org1881828">Helm - where to store files/configuration variables/secrets?</h3>
 <ul>
 <li class="on"><code>[X]</code> <i>Helm Charts</i> are better to be stored with project</li>
 <li class="off"><code>[&#xa0;]</code> Where to store configuration?
@@ -559,8 +598,8 @@ subscription for RedHat account</li>
 </section>
 </section>
 <section>
-<section id="slide-orgc5ae949">
-<h2 id="orgc5ae949">Common problems</h2>
+<section id="slide-orgb49120e">
+<h2 id="orgb49120e">Common problems</h2>
 <ul>
 <li>Your app should follow <a href="https://12factor.net/">https://12factor.net/</a></li>
 <li>We had problems with systems like Magento:
@@ -581,8 +620,8 @@ subscription for RedHat account</li>
 </section>
 </section>
 <section>
-<section id="slide-org9b3f624">
-<h2 id="org9b3f624">Presentation build with</h2>
+<section id="slide-org9db65a3">
+<h2 id="org9db65a3">Presentation build with</h2>
 <ul>
 <li><a href="https://github.com/yjwen/org-reveal/">org-reveal</a></li>
 <li><a href="https://revealjs.com/">Reveal.js</a></li>
@@ -591,8 +630,8 @@ subscription for RedHat account</li>
 </section>
 </section>
 <section>
-<section id="slide-org19de523">
-<h2 id="org19de523">QR-code</h2>
+<section id="slide-orgd893ebd">
+<h2 id="orgd893ebd">QR-code</h2>
 
 <div class="figure">
 <p><img src="./images/kharkivpy.png" alt="kharkivpy.png" />
@@ -600,8 +639,8 @@ subscription for RedHat account</li>
 </div>
 
 </section>
-<section id="slide-orge9bd09b">
-<h3 id="orge9bd09b">Who am I</h3>
+<section id="slide-orga295bba">
+<h3 id="orga295bba">Who am I</h3>
 <p>
 avkoval (bitbucket, github)
 <del><a href="http://alex.koval.kharkov.ua">http://alex.koval.kharkov.ua</a></del>
